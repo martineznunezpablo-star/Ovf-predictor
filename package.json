@@ -1,0 +1,6 @@
+{
+  "name": "ovf-predictor",
+  "version": "1.0.0",
+  "description": "Herramienta de apoyo a la decisión clínica para fracturas osteoporóticas toracolumbares",
+  "private": true
+}
