@@ -8,7 +8,322 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display&display=swap" rel="stylesheet">
     <style>
         :root{--bg:#F7F5F0;--surface:#FFF;--surface-alt:#EDE9E1;--border:#D4CFC5;--text:#1A1A1A;--text-muted:#6B6560;--accent:#1B6B4A;--accent-light:#E8F3ED;--accent-dark:#0F4A32;--danger:#B8352A;--danger-light:#FDF0EF;--warning-light:#FFF8ED;--blue:#2563EB;--blue-light:#EFF6FF;--radius:12px;--shadow-sm:0 1px 2px rgba(0,0,0,.05);--shadow-md:0 4px 12px rgba(0,0,0,.08);--shadow-lg:0 12px 40px rgba(0,0,0,.1)}
+        *{margin:0;padding:0;box-sizing:bor<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OVF Predictor</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <style>
+        :root{--bg:#F7F5F0;--surface:#FFF;--surface-alt:#EDE9E1;--border:#D4CFC5;--text:#1A1A1A;--text-muted:#6B6560;--accent:#1B6B4A;--accent-light:#E8F3ED;--accent-dark:#0F4A32;--danger:#B8352A;--danger-light:#FDF0EF;--warning-light:#FFF8ED;--radius:12px;--shadow-sm:0 1px 2px rgba(0,0,0,.05);--shadow-md:0 4px 12px rgba(0,0,0,.08);--shadow-lg:0 12px 40px rgba(0,0,0,.1)}
         *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+
+        .header{background:linear-gradient(135deg,#0F2B1D,#1B4A35 50%,#1B6B4A);padding:2rem 1.5rem;color:#fff;position:relative;overflow:hidden}
+        .header::before{content:'';position:absolute;top:-50%;right:-20%;width:60%;height:200%;background:radial-gradient(ellipse,rgba(255,255,255,.04),transparent 70%);pointer-events:none}
+        .header-inner{max-width:860px;margin:0 auto;position:relative}
+        .header-badge{display:inline-block;font-size:.65rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);padding:.3rem .8rem;border-radius:100px;margin-bottom:1rem}
+        .header h1{font-family:'DM Serif Display',serif;font-size:clamp(1.5rem,3.5vw,2.1rem);font-weight:400;line-height:1.2;margin-bottom:.5rem}
+        .header p{font-size:.88rem;opacity:.75;max-width:600px}
+        .header-stats{display:flex;gap:2rem;margin-top:1rem;flex-wrap:wrap}
+        .header-stat{font-size:.73rem;opacity:.7}
+        .header-stat strong{font-size:1.05rem;display:block;opacity:1;font-weight:600}
+
+        .main{max-width:860px;margin:0 auto;padding:1.5rem}
+        .disclaimer{background:var(--warning-light);border:1px solid #E8D5A8;border-radius:var(--radius);padding:.9rem 1.1rem;margin-bottom:1.5rem;font-size:.78rem;color:#7A5A0A;display:flex;gap:.6rem;align-items:flex-start}
+
+        .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.5rem}
+        @media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+
+        .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.3rem;box-shadow:var(--shadow-sm)}
+        .card-title{font-size:.68rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+
+        .field{margin-bottom:.9rem}.field:last-child{margin-bottom:0}
+        .field label{display:block;font-size:.8rem;font-weight:500;margin-bottom:.25rem}
+        .input-row{display:flex;align-items:center;gap:.7rem}
+        input[type=range]{flex:1;-webkit-appearance:none;appearance:none;height:5px;background:var(--surface-alt);border-radius:3px;outline:none}
+        input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+        .range-value{min-width:2.8rem;text-align:center;font-weight:600;font-size:.95rem;color:var(--accent-dark);background:var(--accent-light);padding:.2rem .4rem;border-radius:6px}
+        select{width:100%;padding:.5rem .7rem;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:.82rem;background:var(--surface);color:var(--text);cursor:pointer}
+        select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(27,107,74,.1)}
+
+        .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:.35rem 0}
+        .toggle-label{font-size:.8rem;font-weight:500}
+        .toggle{position:relative;width:44px;height:24px}.toggle input{opacity:0;width:0;height:0}
+        .toggle-slider{position:absolute;cursor:pointer;inset:0;background:var(--border);border-radius:24px;transition:.3s}
+        .toggle-slider::before{content:'';position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+        .toggle input:checked+.toggle-slider{background:var(--accent)}
+        .toggle input:checked+.toggle-slider::before{transform:translateX(20px)}
+
+        .predict-btn{width:100%;padding:.9rem;background:linear-gradient(135deg,var(--accent-dark),var(--accent));color:#fff;border:none;border-radius:var(--radius);font-family:inherit;font-size:1rem;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:var(--shadow-md)}
+        .predict-btn:hover{transform:translateY(-1px);box-shadow:var(--shadow-lg)}
+
+        .results{margin-top:1.5rem;animation:fadeUp .5s ease}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+        .result-single{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.8rem;text-align:center;box-shadow:var(--shadow-md)}
+        .result-title{font-size:.68rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:1rem}
+        .prob-ring{position:relative;width:140px;height:140px;margin:0 auto 1rem}
+        .prob-ring svg{transform:rotate(-90deg)}
+        .prob-ring-bg{fill:none;stroke:var(--surface-alt);stroke-width:9}
+        .prob-ring-fill{fill:none;stroke-width:9;stroke-linecap:round;transition:stroke-dashoffset 1s ease,stroke .3s ease}
+        .prob-ring-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+        .prob-value{font-family:'DM Serif Display',serif;font-size:2.3rem;line-height:1}
+        .prob-label{font-size:.72rem;color:var(--text-muted);margin-top:.2rem}
+
+        .interp-card{margin-top:1rem;padding:1rem 1.2rem;border-radius:var(--radius);text-align:center}
+        .interp-card.good{background:var(--accent-light);border:1px solid #B7D9C7}
+        .interp-card.bad{background:var(--danger-light);border:1px solid #E8C5C2}
+        .interp-card.mid{background:#FFF8ED;border:1px solid #E8D5A8}
+        .interp-text{font-size:.85rem;font-weight:600;margin-bottom:.2rem}
+        .interp-card.good .interp-text{color:var(--accent-dark)}
+        .interp-card.bad .interp-text{color:var(--danger)}
+        .interp-card.mid .interp-text{color:#7A5A0A}
+        .interp-sub{font-size:.76rem;color:var(--text-muted)}
+
+        .factors-card{margin-top:1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.3rem;box-shadow:var(--shadow-sm)}
+        .factor-row{display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem;font-size:.78rem}
+        .factor-name{width:160px;flex-shrink:0;text-align:right;color:var(--text-muted);font-size:.74rem}
+        .factor-bar-container{flex:1;height:16px;position:relative}
+        .factor-bar-center{position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--border)}
+        .factor-bar{position:absolute;height:12px;border-radius:3px;transition:width .6s ease}
+        .factor-bar.positive{left:50%;background:linear-gradient(90deg,#4CAF50,#2E7D32)}
+        .factor-bar.negative{right:50%;background:linear-gradient(270deg,#EF5350,#C62828)}
+        .factor-impact{width:48px;text-align:right;font-weight:600;font-size:.72rem}
+        .factor-impact.pos{color:var(--accent)}.factor-impact.neg{color:var(--danger)}
+
+        .footer{margin-top:2rem;padding:1.2rem;text-align:center;font-size:.72rem;color:var(--text-muted);border-top:1px solid var(--border)}
+        .footer-model{display:inline-flex;align-items:center;gap:.5rem;background:var(--surface-alt);padding:.25rem .7rem;border-radius:100px;margin-top:.5rem;font-size:.68rem}
+    </style>
+</head>
+<body>
+
+<div class="header"><div class="header-inner">
+    <div class="header-badge">Herramienta de Investigaci&oacute;n</div>
+    <h1>Predictor de Resultado en Fracturas<br>Osteopor&oacute;ticas Toracolumbares</h1>
+    <p>Regresi&oacute;n log&iacute;stica con 7 variables seleccionadas mediante triangulaci&oacute;n (Mann-Whitney + MI + RF) y <em>forward selection</em></p>
+    <div class="header-stats">
+        <div class="header-stat"><strong>482</strong> pacientes</div>
+        <div class="header-stat"><strong>0.686</strong> AUC (10-fold CV)</div>
+        <div class="header-stat"><strong>7</strong> variables</div>
+    </div>
+</div></div>
+
+<div class="main">
+    <div class="disclaimer">
+        <span style="font-size:1rem;flex-shrink:0">&#9888;&#65039;</span>
+        <div><strong>Solo para uso en investigaci&oacute;n.</strong> Prototipo acad&eacute;mico. No sustituye el juicio cl&iacute;nico. Modelo observacional retrospectivo.</div>
+    </div>
+
+    <div class="form-grid">
+
+        <!-- FRACTURA Y TRATAMIENTO -->
+        <div class="card">
+            <div class="card-title">&#129460; Fractura &amp; Tratamiento</div>
+
+            <div class="field">
+                <label>Clasificaci&oacute;n OF (Gold Standard)</label>
+                <select id="gs">
+                    <option value="1">OF 1 &mdash; Sin deformidad</option>
+                    <option value="2">OF 2 &mdash; Deformidad &le;20%</option>
+                    <option value="3" selected>OF 3 &mdash; Deformidad 20-40%</option>
+                    <option value="4">OF 4 &mdash; P&eacute;rdida &gt;40% / muro post.</option>
+                    <option value="5">OF 5 &mdash; D&eacute;ficit neurol&oacute;gico</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label>Mecanismo lesional</label>
+                <select id="mech">
+                    <option value="trauma">Traumatismo baja energ&iacute;a</option>
+                    <option value="notrauma">Sin traumatismo (espont&aacute;neo)</option>
+                    <option value="overexertion">Sobreesfuerzo</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <div class="toggle-row">
+                    <span class="toggle-label">Fractura m&uacute;ltiple</span>
+                    <label class="toggle"><input type="checkbox" id="mult"><span class="toggle-slider"></span></label>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="toggle-row">
+                    <span class="toggle-label">Cementaci&oacute;n vertebral (VA)</span>
+                    <label class="toggle"><input type="checkbox" id="va"><span class="toggle-slider"></span></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- PACIENTE -->
+        <div class="card">
+            <div class="card-title">&#128100; Paciente</div>
+
+            <div class="field">
+                <label>IMC (kg/m&sup2;)</label>
+                <div class="input-row">
+                    <input type="range" id="imc" min="15" max="43" value="27" step="0.5" oninput="uv('imc')">
+                    <span class="range-value" id="imc-val">27</span>
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Lugar de Residencia</label>
+                <select id="resi">
+                    <option value="0" selected>Domicilio</option>
+                    <option value="1">Residencia / Instituci&oacute;n</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label>Vida Independiente Previa</label>
+                <select id="preindep">
+                    <option value="0" selected>A &mdash; Independiente</option>
+                    <option value="1">B &mdash; Parcialmente dependiente</option>
+                    <option value="2">C &mdash; Dependiente</option>
+                    <option value="3">D &mdash; Totalmente dependiente</option>
+                </select>
+            </div>
+        </div>
+
+    </div>
+
+    <button class="predict-btn" onclick="predict()">&#9654;&nbsp; Calcular Predicci&oacute;n</button>
+
+    <!-- RESULTADO -->
+    <div id="results" class="results" style="display:none">
+
+        <div class="result-single">
+            <div class="result-title">Probabilidad de Resultado Favorable</div>
+            <div class="prob-ring">
+                <svg viewBox="0 0 140 140">
+                    <circle class="prob-ring-bg" cx="70" cy="70" r="60"/>
+                    <circle id="ring-main" class="prob-ring-fill" cx="70" cy="70" r="60"
+                        stroke="#1B6B4A" stroke-dasharray="376.99" stroke-dashoffset="376.99"/>
+                </svg>
+                <div class="prob-ring-text">
+                    <span class="prob-value" id="prob-main">&mdash;</span>
+                    <span class="prob-label">resultado favorable</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="interp" class="interp-card mid">
+            <div class="interp-text" id="interp-text"></div>
+            <div class="interp-sub" id="interp-sub"></div>
+        </div>
+
+        <div class="factors-card">
+            <div class="card-title">&#128202; Contribuci&oacute;n de cada variable</div>
+            <div id="fc"></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div>Mart&iacute;nez-N&uacute;&ntilde;ez P, Guti&eacute;rrez-Gonz&aacute;lez R. Modelo de ML explicable para OVFs toracolumbares.<br>TFM &mdash; Universidad Europea de Madrid &mdash; 2025/2026</div>
+        <div class="footer-model">&#128208; Logistic Regression &middot; L2 (C=1.0) &middot; 10-fold CV &middot; AUC 0.686 &middot; n=482 &middot; 7 variables &middot; Forward Selection</div>
+    </div>
+</div>
+
+<script>
+// ===================================================================
+// MODEL: Logistic Regression · 7 variables · 10-fold CV AUC = 0.686
+// Variables (orden fijo):
+//   0: GOLD STANDARD (tipo OF)       ordinal 1–5
+//   1: VA (cementación vertebral)    binaria 0/1
+//   2: IMC                           continua kg/m²
+//   3: MECHANISM_No trauma           binaria 0/1
+//   4: Lugar de residencia           binaria 0=domicilio / 1=residencia
+//   5: PRE INDEPENDENT LIVING        ordinal A=0, B=1, C=2, D=3
+//   6: MULTIPLE                      binaria 1=única / 0=múltiple
+// ===================================================================
+const M = {
+    intercept: -0.16428194488780343,
+    coef: [
+        -0.36893534987787363,  // GOLD STANDARD
+         0.5364141323225016,   // VA
+        -0.17586818487311223,  // IMC
+        -0.3304054440675994,   // MECHANISM_No trauma
+        -0.293610834162676,    // Lugar de residencia
+         0.196129574635685,    // PRE INDEPENDENT LIVING
+        -0.2221035008155671    // MULTIPLE (1=única)
+    ],
+    mean: [2.871369294605809, 0.12655601659751037, 26.57452353817925, 0.24273858921161826, 0.13485477178423236, 0.19294605809128632, 0.7634854771784232],
+    std:  [0.8879377200805392, 0.3324749483201419,  5.163270179317583,  0.4287383427210255,  0.34156838599503764, 0.563510073467546,   0.4249416469540949],
+    labels: ["Tipo Fractura (OF)", "Cementaci\u00f3n Vertebral", "IMC", "Sin traumatismo", "Lugar de residencia", "Vida indep. previa", "Fractura \u00fanica"]
+};
+
+function sigmoid(x) { return 1 / (1 + Math.exp(-x)); }
+
+function uv(id) {
+    document.getElementById(id + '-val').textContent = document.getElementById(id).value;
+}
+
+function predict() {
+    const mech = document.getElementById('mech').value;
+    const raw = [
+        +document.getElementById('gs').value,
+        document.getElementById('va').checked ? 1 : 0,
+        +document.getElementById('imc').value,
+        mech === 'notrauma' ? 1 : 0,
+        +document.getElementById('resi').value,
+        +document.getElementById('preindep').value,
+        document.getElementById('mult').checked ? 0 : 1
+    ];
+
+    const sc    = raw.map((v, i) => (v - M.mean[i]) / M.std[i]);
+    const logit = M.intercept + sc.reduce((s, v, i) => s + M.coef[i] * v, 0);
+    const p     = sigmoid(logit);
+
+    document.getElementById('results').style.display = 'block';
+    document.getElementById('prob-main').textContent = (p * 100).toFixed(1) + '%';
+    setTimeout(() => {
+        const ring = document.getElementById('ring-main');
+        ring.style.strokeDashoffset = 376.99 * (1 - p);
+        ring.style.stroke = p >= 0.5 ? '#1B6B4A' : '#B8352A';
+    }, 100);
+
+    const ic = document.getElementById('interp');
+    const it = document.getElementById('interp-text');
+    const is = document.getElementById('interp-sub');
+    if (p >= 0.60) {
+        ic.className = 'interp-card good';
+        it.textContent = '\u2192 Probabilidad elevada de resultado favorable (' + (p * 100).toFixed(1) + '%)';
+        is.textContent = 'El perfil del paciente se asocia con una evoluci\u00f3n cl\u00ednica favorable seg\u00fan el modelo.';
+    } else if (p >= 0.40) {
+        ic.className = 'interp-card mid';
+        it.textContent = '\u2192 Probabilidad intermedia (' + (p * 100).toFixed(1) + '%)';
+        is.textContent = 'Resultado incierto. Se recomienda valorar factores cl\u00ednicos adicionales.';
+    } else {
+        ic.className = 'interp-card bad';
+        it.textContent = '\u2192 Probabilidad reducida de resultado favorable (' + (p * 100).toFixed(1) + '%)';
+        is.textContent = 'El perfil del paciente se asocia con mayor riesgo de evoluci\u00f3n desfavorable.';
+    }
+
+    const contribs = raw.map((v, i) => ({ name: M.labels[i], c: M.coef[i] * sc[i] }));
+    contribs.sort((a, b) => Math.abs(b.c) - Math.abs(a.c));
+    const mx = Math.max(...contribs.map(c => Math.abs(c.c)));
+    const fc = document.getElementById('fc');
+    fc.innerHTML = '';
+    contribs.forEach(c => {
+        const pct = (Math.abs(c.c) / mx) * 42;
+        const pos = c.c >= 0;
+        fc.innerHTML += '<div class="factor-row">' +
+            '<span class="factor-name">' + c.name + '</span>' +
+            '<div class="factor-bar-container"><div class="factor-bar-center"></div>' +
+            '<div class="factor-bar ' + (pos ? 'positive' : 'negative') + '" style="width:' + pct + '%"></div></div>' +
+            '<span class="factor-impact ' + (pos ? 'pos' : 'neg') + '">' + (pos ? '+' : '') + c.c.toFixed(3) + '</span></div>';
+    });
+
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+</script>
+
+</body>
+</html>
+der-box}
         body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
 
         /* HEADER */
