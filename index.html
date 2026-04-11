@@ -79,7 +79,7 @@
 
         .factors-card{margin-top:1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.3rem;box-shadow:var(--shadow-sm)}
         .factor-row{display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem;font-size:.78rem}
-        .factor-name{width:160px;flex-shrink:0;text-align:right;color:var(--text-muted);font-size:.74rem}
+        .factor-name{width:170px;flex-shrink:0;text-align:right;color:var(--text-muted);font-size:.74rem}
         .factor-bar-container{flex:1;height:16px;position:relative}
         .factor-bar-center{position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--border)}
         .factor-bar{position:absolute;height:12px;border-radius:3px;transition:width .6s ease}
@@ -100,7 +100,7 @@
     <p>Modelo de apoyo a la decisi&oacute;n cl&iacute;nica basado en regresi&oacute;n log&iacute;stica con 7 variables predictoras seleccionadas mediante triangulaci&oacute;n y <em>forward selection</em></p>
     <div class="header-stats">
         <div class="header-stat"><strong>482</strong> pacientes</div>
-        <div class="header-stat"><strong>0.686</strong> AUC (10-fold CV)</div>
+        <div class="header-stat"><strong>0.685</strong> AUC (10-fold CV)</div>
         <div class="header-stat"><strong>7</strong> variables</div>
     </div>
 </div></div>
@@ -118,7 +118,7 @@
             <div class="card-title">&#129460; Fractura</div>
 
             <div class="field">
-                <label>Clasificaci&oacute;n OF (Gold Standard)</label>
+                <label>Morfolog&iacute;a de la fractura (OF)</label>
                 <select id="gs">
                     <option value="1">OF 1 &mdash; Sin deformidad</option>
                     <option value="2">OF 2 &mdash; Deformidad &le;20%</option>
@@ -133,7 +133,6 @@
                 <select id="mech">
                     <option value="trauma">Traumatismo baja energ&iacute;a</option>
                     <option value="notrauma">Sin traumatismo (espont&aacute;neo)</option>
-                    <option value="overexertion">Sobreesfuerzo</option>
                 </select>
             </div>
 
@@ -157,8 +156,8 @@
             <div class="field">
                 <label>IMC (kg/m&sup2;)</label>
                 <div class="input-row">
-                    <input type="range" id="imc" min="15" max="43" value="27" step="0.5" oninput="uv('imc')">
-                    <span class="range-value" id="imc-val">27</span>
+                    <input type="range" id="imc" min="15" max="43" value="26" step="0.5" oninput="uv('imc')">
+                    <span class="range-value" id="imc-val">26</span>
                 </div>
             </div>
 
@@ -171,13 +170,11 @@
             </div>
 
             <div class="field">
-                <label>Vida Independiente Previa</label>
-                <select id="preindep">
-                    <option value="0" selected>A &mdash; Independiente</option>
-                    <option value="1">B &mdash; Parcialmente dependiente</option>
-                    <option value="2">C &mdash; Dependiente</option>
-                    <option value="3">D &mdash; Totalmente dependiente</option>
-                </select>
+                <div class="toggle-row">
+                    <span class="toggle-label">Dependencia funcional previa</span>
+                    <label class="toggle"><input type="checkbox" id="dep"><span class="toggle-slider"></span></label>
+                </div>
+                <div class="hint" style="margin-top:.3rem">Activar si el paciente <strong>no</strong> era funcionalmente independiente antes de la fractura</div>
             </div>
         </div>
 
@@ -231,38 +228,47 @@
 
     <div class="footer">
         <div>Mart&iacute;nez-N&uacute;&ntilde;ez P, Guti&eacute;rrez-Gonz&aacute;lez R. Modelo de ML explicable para OVFs toracolumbares.<br>TFM &mdash; Universidad Europea de Madrid &mdash; 2025/2026</div>
-        <div class="footer-model">&#128208; Logistic Regression &middot; L2 (C=1.0) &middot; 10-fold CV &middot; AUC 0.686 &middot; n=482 &middot; 7 variables &middot; Forward Selection</div>
+        <div class="footer-model">&#128208; Logistic Regression &middot; L2 (C=1.0) &middot; 10-fold CV &middot; AUC 0.685 &middot; n=482 &middot; 7 variables &middot; DATABASE_RAW_definitivo</div>
     </div>
 </div>
 
 <script>
 // ===================================================================
-// MODEL: Logistic Regression · 7 variables · 10-fold CV AUC = 0.686
+// MODEL: Logistic Regression · 7 variables · 10-fold CV AUC = 0.685
+// Entrenado sobre DATABASE_RAW_definitivo.xlsx (n=482)
 // Selección: triangulación (Mann-Whitney + MI + RF) + forward selection
 //
 // Variables (orden fijo):
-//   0: GOLD STANDARD (tipo OF)       ordinal 1–5
-//   1: VA (cementación vertebral)    binaria 0/1  ← se compara 0 vs 1
-//   2: IMC                           continua kg/m²
-//   3: MECHANISM_No trauma           binaria 0/1
-//   4: Lugar de residencia           binaria 0=domicilio / 1=residencia
-//   5: PRE INDEPENDENT LIVING        ordinal A=0, B=1, C=2, D=3
-//   6: MULTIPLE                      binaria 1=única / 0=múltiple
+//   0: MORFOLOGÍA FRACTURA (OF)   ordinal 1–5
+//   1: VA (cementación)           binaria 0/1   ← comparado 0 vs 1
+//   2: IMC                        continua kg/m² (mediana imputación: 25.99)
+//   3: MECANISMO_No trauma        binaria 0/1
+//   4: LUGAR RESIDENCIA           binaria 0=domicilio / 1=residencia
+//   5: INDEPENDENCIA FUNCIONAL    binaria 0=independiente / 1=dependiente
+//   6: MULTIPLE                   binaria 1=única / 0=múltiple
 // ===================================================================
 const M = {
-    intercept: -0.16428194488780343,
+    intercept: -0.16377771256791387,
     coef: [
-        -0.36893534987787363,  // GOLD STANDARD
-         0.5364141323225016,   // VA
-        -0.17586818487311223,  // IMC
-        -0.3304054440675994,   // MECHANISM_No trauma
-        -0.293610834162676,    // Lugar de residencia
-         0.196129574635685,    // PRE INDEPENDENT LIVING
-        -0.2221035008155671    // MULTIPLE (1=única)
+        -0.3563174022984883,   // MORFOLOGÍA FRACTURA (OF)
+         0.534234503963372,    // VA
+        -0.2031988270258243,   // IMC
+        -0.3242397616418155,   // MECANISMO_No trauma
+        -0.2845864035855916,   // LUGAR RESIDENCIA
+         0.1560203588622946,   // INDEPENDENCIA FUNCIONAL (1=dependiente)
+        -0.22036627833137942   // MULTIPLE (1=única)
     ],
-    mean: [2.871369294605809, 0.12655601659751037, 26.57452353817925, 0.24273858921161826, 0.13485477178423236, 0.19294605809128632, 0.7634854771784232],
-    std:  [0.8879377200805392, 0.3324749483201419,  5.163270179317583,  0.4287383427210255,  0.34156838599503764, 0.563510073467546,   0.4249416469540949],
-    labels: ["Tipo Fractura (OF)", "Cementaci\u00f3n Vertebral", "IMC", "Sin traumatismo", "Lugar de residencia", "Vida indep. previa", "Fractura \u00fanica"]
+    mean: [2.871369294605809, 0.12655601659751037, 26.172385892116182, 0.24273858921161826, 0.13692946058091288, 0.11825726141078838, 0.7634854771784232],
+    std:  [0.8879377200805392, 0.3324749483201419,  3.8221767999520146, 0.4287383427210255,  0.3437728660117507,  0.3229124982629332,  0.4249416469540949],
+    labels: [
+        "Morfolog\u00eda fractura (OF)",
+        "Cementaci\u00f3n Vertebral",
+        "IMC",
+        "Sin traumatismo",
+        "Lugar de residencia",
+        "Dependencia funcional previa",
+        "Fractura \u00fanica"
+    ]
 };
 
 function sigmoid(x) { return 1 / (1 + Math.exp(-x)); }
@@ -270,19 +276,26 @@ function sigmoid(x) { return 1 / (1 + Math.exp(-x)); }
 function getRaw(va) {
     const mech = document.getElementById('mech').value;
     return [
-        +document.getElementById('gs').value,
-        va,
-        +document.getElementById('imc').value,
-        mech === 'notrauma' ? 1 : 0,
-        +document.getElementById('resi').value,
-        +document.getElementById('preindep').value,
-        document.getElementById('mult').checked ? 0 : 1
+        +document.getElementById('gs').value,             // 0: OF
+        va,                                               // 1: VA
+        +document.getElementById('imc').value,            // 2: IMC
+        mech === 'notrauma' ? 1 : 0,                     // 3: No trauma
+        +document.getElementById('resi').value,           // 4: Residencia
+        document.getElementById('dep').checked ? 1 : 0,  // 5: Dependencia (1=dependiente)
+        document.getElementById('mult').checked ? 0 : 1  // 6: MULTIPLE (1=única)
     ];
 }
 
 function predictProba(raw) {
     const sc = raw.map((v, i) => (v - M.mean[i]) / M.std[i]);
     return sigmoid(M.intercept + sc.reduce((s, v, i) => s + M.coef[i] * v, 0));
+}
+
+function getContributions(raw) {
+    return raw.map((v, i) => ({
+        name: M.labels[i],
+        c: M.coef[i] * ((v - M.mean[i]) / M.std[i])
+    }));
 }
 
 function uv(id) {
@@ -346,13 +359,6 @@ function predict() {
     });
 
     document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-function getContributions(raw) {
-    return raw.map((v, i) => ({
-        name: M.labels[i],
-        c: M.coef[i] * ((v - M.mean[i]) / M.std[i])
-    }));
 }
 </script>
 
