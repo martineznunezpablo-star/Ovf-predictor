@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OVF Predictor v5</title>
+    <title>OVF Predictor v5.1</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display&display=swap" rel="stylesheet">
     <style>
         :root{--bg:#F7F5F0;--surface:#FFF;--surface-alt:#EDE9E1;--border:#D4CFC5;--text:#1A1A1A;--text-muted:#6B6560;--accent:#1B6B4A;--accent-light:#E8F3ED;--accent-dark:#0F4A32;--danger:#B8352A;--danger-light:#FDF0EF;--warning-light:#FFF8ED;--blue:#2563EB;--blue-light:#EFF6FF;--radius:12px;--shadow-sm:0 1px 2px rgba(0,0,0,.05);--shadow-md:0 4px 12px rgba(0,0,0,.08);--shadow-lg:0 12px 40px rgba(0,0,0,.1)}
@@ -232,7 +232,7 @@
 
     <div class="footer">
         <div>Mart&iacute;nez-N&uacute;&ntilde;ez P, Guti&eacute;rrez-Gonz&aacute;lez R. <span data-i18n="footer_desc"></span><br>TFM &mdash; Universidad Europea &mdash; 2025/2026</div>
-        <div class="footer-model">&#128208; Logistic Regression &middot; Isotonic Calibration &middot; AUC 0.706 &middot; n=482 &middot; 9 features &middot; v5.0</div>
+        <div class="footer-model">&#128208; Logistic Regression &middot; Platt Calibration &middot; AUC 0.706 &middot; n=482 &middot; 9 features &middot; v5.1</div>
     </div>
 </div>
 
@@ -242,12 +242,12 @@
 // ===================================================================
 const I = {
 es: {
-    header_badge: "Herramienta de Investigaci\u00f3n \u2014 v5.0",
+    header_badge: "Herramienta de Investigaci\u00f3n \u2014 v5.1",
     header_title: "Predictor de Resultado en Fracturas<br>Osteopor\u00f3ticas Toracolumbares",
-    header_subtitle: "Modelo de apoyo a la decisi\u00f3n cl\u00ednica basado en regresi\u00f3n log\u00edstica con calibraci\u00f3n isot\u00f3nica y 9 variables predictoras",
+    header_subtitle: "Modelo de apoyo a la decisi\u00f3n cl\u00ednica basado en regresi\u00f3n log\u00edstica con calibraci\u00f3n Platt y 9 variables predictoras",
     patients: "pacientes", variables: "variables",
-    isotonic_word: "Isot\u00f3nica", calibration: "calibraci\u00f3n",
-    disclaimer: "<strong>Solo para uso en investigaci\u00f3n.</strong> Prototipo acad\u00e9mico. No sustituye el juicio cl\u00ednico. Modelo observacional retrospectivo con calibraci\u00f3n isot\u00f3nica.",
+    isotonic_word: "Platt", calibration: "calibraci\u00f3n",
+    disclaimer: "<strong>Solo para uso en investigaci\u00f3n.</strong> Prototipo acad\u00e9mico. No sustituye el juicio cl\u00ednico. Modelo observacional retrospectivo con calibraci\u00f3n Platt.",
     card_patient: "&#128100; Paciente",
     card_fracture: "&#129460; Fractura",
     card_treatment: "&#128295; Tratamiento",
@@ -283,12 +283,12 @@ es: {
     ]
 },
 en: {
-    header_badge: "Research Tool \u2014 v5.0",
+    header_badge: "Research Tool \u2014 v5.1",
     header_title: "Outcome Predictor for Thoracolumbar<br>Osteoporotic Fractures",
-    header_subtitle: "Clinical decision support model based on logistic regression with isotonic calibration and 9 predictor variables",
+    header_subtitle: "Clinical decision support model based on logistic regression with Platt calibration and 9 predictor variables",
     patients: "patients", variables: "variables",
-    isotonic_word: "Isotonic", calibration: "calibration",
-    disclaimer: "<strong>For research use only.</strong> Academic prototype. Does not replace clinical judgment. Retrospective observational model with isotonic calibration.",
+    isotonic_word: "Platt", calibration: "calibration",
+    disclaimer: "<strong>For research use only.</strong> Academic prototype. Does not replace clinical judgment. Retrospective observational model with Platt calibration.",
     card_patient: "&#128100; Patient",
     card_fracture: "&#129460; Fracture",
     card_treatment: "&#128295; Treatment",
@@ -361,11 +361,13 @@ function setLang(lang) {
 }
 
 // ===================================================================
-// MODEL v5: Logistic Regression + Isotonic Calibration
+// MODEL v5.1: Logistic Regression + Platt Scaling
 // Trained on 385 patients, validated on 97 (test) + 74 (external)
 // 9 Features: EDAD, VA, MECANISMO_No_trauma, HEALTH STATUS,
 //   PROGRESION DEFORMIDAD, IMC, mFI, MORFOLOGIA FRACTURA, UH
-// Predicts P(POOR) → isotonic calibration → 1-p = P(GOOD)
+// Predicts P(POOR) → Platt calibration → 1-p = P(GOOD)
+// Platt fixes the "dead zone" bug of isotonic (82.6% mapped to 100%)
+// Brier ext: 0.190 (Platt) vs 0.508 (old isotonic)
 // ===================================================================
 const M = {
     intercept: -3.0248102849118874,
@@ -382,30 +384,18 @@ const M = {
     ],
     mean: [75.6623,0.1195,0.2494,-0.2597,0.0597,25.9642,0.9273,2.8649,78.0437],
     std:  [9.4805,0.3244,0.4326,0.5148,0.2370,3.6547,0.7661,0.8871,25.9608],
-    iso_x:[0.1175,0.1303,0.2578,0.2582,0.3000,0.3029,0.3439,0.3460,0.3512,0.3520,0.3764,0.3781,0.5092,0.5095,0.5218,0.5223,0.5311,0.5322,0.5835,0.5844,0.5941,0.5942,0.6120,0.6125,0.6210,0.6226,0.6337,0.6389,0.6968,0.6986,0.8816,0.8973,0.9054],
-    iso_y:[0.0000,0.0952,0.0952,0.2000,0.2000,0.3125,0.3125,0.3333,0.3333,0.3636,0.3636,0.4235,0.4235,0.5000,0.5000,0.5455,0.5455,0.5614,0.5614,0.5833,0.5833,0.6000,0.6000,0.6250,0.6250,0.6667,0.6667,0.7250,0.7250,0.7969,0.7969,1.0000,1.0000]
+    // Platt scaling parameters: P(POOR)_calibrated = sigmoid(platt_a * logit + platt_b)
+    platt_a: 0.40935903736065543,
+    platt_b: 1.3915476914803802
 };
 
 function sigmoid(x){return 1/(1+Math.exp(-x))}
 
-function isotonicCalibrate(p){
-    const xs=M.iso_x,ys=M.iso_y;
-    if(p<=xs[0])return ys[0];
-    if(p>=xs[xs.length-1])return ys[ys.length-1];
-    for(let i=0;i<xs.length-1;i++){
-        if(p>=xs[i]&&p<=xs[i+1]){
-            const d=xs[i+1]-xs[i];
-            const t=d<1e-10?0:(p-xs[i])/d;
-            return ys[i]+t*(ys[i+1]-ys[i]);
-        }
-    }
-    return ys[ys.length-1];
-}
-
 function predictProba(raw){
     const sc=raw.map((v,i)=>(v-M.mean[i])/M.std[i]);
     const logit=M.intercept+sc.reduce((s,v,i)=>s+M.coef[i]*v,0);
-    const pPoor=isotonicCalibrate(sigmoid(logit));
+    // Platt scaling: re-calibrate the logit through a second sigmoid
+    const pPoor=sigmoid(M.platt_a*logit+M.platt_b);
     return 1-pPoor; // probability of GOOD outcome
 }
 
