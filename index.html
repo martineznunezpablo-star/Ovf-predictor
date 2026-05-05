@@ -3,102 +3,231 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OVF Predictor v5.1</title>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <title>OVF Predictor v6.1 — Predictor Clínico de Fracturas Osteoporóticas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root{--bg:#F7F5F0;--surface:#FFF;--surface-alt:#EDE9E1;--border:#D4CFC5;--text:#1A1A1A;--text-muted:#6B6560;--accent:#1B6B4A;--accent-light:#E8F3ED;--accent-dark:#0F4A32;--danger:#B8352A;--danger-light:#FDF0EF;--warning-light:#FFF8ED;--blue:#2563EB;--blue-light:#EFF6FF;--radius:12px;--shadow-sm:0 1px 2px rgba(0,0,0,.05);--shadow-md:0 4px 12px rgba(0,0,0,.08);--shadow-lg:0 12px 40px rgba(0,0,0,.1)}
+        :root{
+            /* MEDICAL BLUE PALETTE — Confianza y Calma */
+            --bg:#F8FAFC;
+            --surface:#FFFFFF;
+            --surface-alt:#F1F5F9;
+            --border:#E2E8F0;
+            --border-strong:#CBD5E1;
+            --text:#0F172A;
+            --text-muted:#64748B;
+
+            --primary:#2563EB;
+            --primary-dark:#1E40AF;
+            --primary-darker:#1E3A8A;
+            --primary-light:#DBEAFE;
+            --primary-lighter:#EFF6FF;
+
+            /* TRAFFIC LIGHT — Visualización de Riesgo */
+            --green:#16A34A;
+            --green-dark:#15803D;
+            --green-light:#DCFCE7;
+            --green-bg:#F0FDF4;
+            --yellow:#CA8A04;
+            --yellow-dark:#A16207;
+            --yellow-light:#FEF3C7;
+            --yellow-bg:#FFFBEB;
+            --red:#DC2626;
+            --red-dark:#B91C1C;
+            --red-light:#FEE2E2;
+            --red-bg:#FEF2F2;
+
+            --shadow-sm:0 1px 2px rgba(15,23,42,.04);
+            --shadow-md:0 4px 12px rgba(15,23,42,.06);
+            --shadow-lg:0 12px 32px rgba(15,23,42,.08);
+            --shadow-xl:0 20px 48px rgba(15,23,42,.12);
+
+            --radius:12px;
+            --radius-lg:16px;
+        }
         *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+        body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
 
-        .header{background:linear-gradient(135deg,#0F2B1D,#1B4A35 50%,#1B6B4A);padding:2rem 1.5rem;color:#fff;position:relative;overflow:hidden}
-        .header::before{content:'';position:absolute;top:-50%;right:-20%;width:60%;height:200%;background:radial-gradient(ellipse,rgba(255,255,255,.04),transparent 70%);pointer-events:none}
-        .header-inner{max-width:1000px;margin:0 auto;position:relative}
-        .header-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;flex-wrap:wrap;gap:.8rem}
-        .header-badge{display:inline-block;font-size:.65rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);padding:.3rem .8rem;border-radius:100px}
-        .header h1{font-family:'DM Serif Display',serif;font-size:clamp(1.5rem,3.5vw,2.1rem);font-weight:400;line-height:1.2;margin-bottom:.5rem}
-        .header p{font-size:.88rem;opacity:.75;max-width:600px}
-        .header-stats{display:flex;gap:2rem;margin-top:1rem;flex-wrap:wrap}
-        .header-stat{font-size:.73rem;opacity:.7}
-        .header-stat strong{font-size:1.05rem;display:block;opacity:1;font-weight:600}
+        /* ============== HEADER (azul médico) ============== */
+        .header{background:linear-gradient(135deg,var(--primary-darker) 0%,var(--primary-dark) 50%,var(--primary) 100%);padding:2rem 1.5rem 2.2rem;color:#fff;position:relative;overflow:hidden}
+        .header::before{content:'';position:absolute;top:-30%;right:-15%;width:55%;height:160%;background:radial-gradient(ellipse,rgba(255,255,255,.08),transparent 70%);pointer-events:none}
+        .header::after{content:'';position:absolute;bottom:-50%;left:-10%;width:40%;height:120%;background:radial-gradient(ellipse,rgba(255,255,255,.04),transparent 70%);pointer-events:none}
+        .header-inner{max-width:1100px;margin:0 auto;position:relative}
+        .header-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.1rem;flex-wrap:wrap;gap:.8rem}
+        .header-badge{display:inline-flex;align-items:center;gap:.4rem;font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);padding:.35rem .85rem;border-radius:100px;backdrop-filter:blur(10px)}
+        .header-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:#86EFAC;box-shadow:0 0 8px #86EFAC}
+        .header h1{font-family:'Inter',sans-serif;font-size:clamp(1.5rem,3.4vw,2.15rem);font-weight:700;line-height:1.18;margin-bottom:.55rem;letter-spacing:-.02em}
+        .header p{font-size:.92rem;opacity:.85;max-width:640px;font-weight:400}
+        .header-stats{display:flex;gap:2.2rem;margin-top:1.4rem;flex-wrap:wrap}
+        .header-stat{font-size:.72rem;opacity:.75;font-weight:500;letter-spacing:.02em}
+        .header-stat strong{font-size:1.15rem;display:block;opacity:1;font-weight:700;letter-spacing:-.01em}
 
-        .lang-switch{display:flex;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:100px;overflow:hidden;flex-shrink:0}
-        .lang-btn{padding:.35rem .85rem;font-family:inherit;font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border:none;cursor:pointer;transition:all .25s;color:rgba(255,255,255,.6);background:transparent}
-        .lang-btn.active{background:rgba(255,255,255,.2);color:#fff}
-        .lang-btn:hover:not(.active){color:rgba(255,255,255,.85)}
+        .lang-switch{display:flex;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:100px;overflow:hidden;flex-shrink:0;backdrop-filter:blur(10px)}
+        .lang-btn{padding:.4rem .9rem;font-family:inherit;font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border:none;cursor:pointer;transition:all .25s;color:rgba(255,255,255,.65);background:transparent}
+        .lang-btn.active{background:rgba(255,255,255,.22);color:#fff}
+        .lang-btn:hover:not(.active){color:rgba(255,255,255,.9)}
 
-        .main{max-width:1000px;margin:0 auto;padding:1.5rem}
-        .disclaimer{background:var(--warning-light);border:1px solid #E8D5A8;border-radius:var(--radius);padding:.9rem 1.1rem;margin-bottom:1.5rem;font-size:.78rem;color:#7A5A0A;display:flex;gap:.6rem;align-items:flex-start}
+        /* ============== MAIN ============== */
+        .main{max-width:1100px;margin:0 auto;padding:1.6rem 1.5rem 2rem}
 
-        .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.5rem}
-        @media(max-width:700px){.form-grid{grid-template-columns:1fr}}
+        .disclaimer{background:var(--yellow-bg);border:1px solid #FDE68A;border-radius:var(--radius);padding:.95rem 1.15rem;margin-bottom:1.6rem;font-size:.82rem;color:#854D0E;display:flex;gap:.7rem;align-items:flex-start}
+        .disclaimer-icon{flex-shrink:0;font-size:1.05rem;line-height:1.4}
 
-        .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.3rem;box-shadow:var(--shadow-sm)}
-        .card-title{font-size:.68rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+        .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.3rem;margin-bottom:1.6rem}
+        @media(max-width:760px){.form-grid{grid-template-columns:1fr}}
 
-        .field{margin-bottom:.9rem}.field:last-child{margin-bottom:0}
-        .field label{display:block;font-size:.8rem;font-weight:500;margin-bottom:.25rem}
-        .field .hint{font-size:.7rem;color:var(--text-muted);margin-bottom:.2rem}
+        .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.4rem;box-shadow:var(--shadow-sm)}
+        .card-title{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--primary-dark);margin-bottom:1.1rem;padding-bottom:.55rem;border-bottom:2px solid var(--primary-lighter);display:flex;align-items:center;gap:.45rem}
+
+        .field{margin-bottom:1rem}
+        .field:last-child{margin-bottom:0}
+        .label-row{display:flex;align-items:center;gap:.4rem;margin-bottom:.3rem}
+        .field label{font-size:.83rem;font-weight:600;color:var(--text)}
+        .field .hint{font-size:.72rem;color:var(--text-muted);margin-bottom:.25rem;font-weight:400}
+
+        /* INFO (i) BUTTONS — heurística */
+        .info-btn{width:18px;height:18px;border-radius:50%;background:var(--primary-lighter);color:var(--primary);border:1.5px solid var(--primary-light);font-size:.7rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-style:italic;font-family:'Georgia',serif;transition:all .2s;flex-shrink:0;padding:0;line-height:1}
+        .info-btn:hover{background:var(--primary);color:#fff;border-color:var(--primary);transform:scale(1.1)}
+        .info-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+        /* TOOLTIP popups */
+        .tooltip-overlay{position:fixed;inset:0;background:rgba(15,23,42,.5);z-index:99;display:none;backdrop-filter:blur(2px)}
+        .tooltip-overlay.show{display:block;animation:fadeIn .2s ease}
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+        .tooltip{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem 1.3rem;max-width:380px;width:calc(100% - 2rem);box-shadow:var(--shadow-xl);z-index:100;display:none}
+        .tooltip.show{display:block;animation:popIn .25s cubic-bezier(.4,0,.2,1)}
+        @keyframes popIn{from{opacity:0;transform:translate(-50%,-45%) scale(.95)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+        .tooltip-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.7rem;padding-bottom:.6rem;border-bottom:1px solid var(--border)}
+        .tooltip-title{font-size:.92rem;font-weight:700;color:var(--primary-dark)}
+        .tooltip-close{width:24px;height:24px;border-radius:50%;background:var(--surface-alt);border:none;cursor:pointer;font-size:1rem;color:var(--text-muted);display:flex;align-items:center;justify-content:center;transition:all .15s}
+        .tooltip-close:hover{background:var(--border);color:var(--text)}
+        .tooltip-body{font-size:.83rem;color:var(--text);line-height:1.55}
+        .tooltip-body strong{color:var(--primary-dark);font-weight:600}
+
+        /* INPUTS */
         .input-row{display:flex;align-items:center;gap:.7rem}
-        input[type=range]{flex:1;-webkit-appearance:none;appearance:none;height:5px;background:var(--surface-alt);border-radius:3px;outline:none}
-        input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.2)}
-        .range-value{min-width:2.8rem;text-align:center;font-weight:600;font-size:.95rem;color:var(--accent-dark);background:var(--accent-light);padding:.2rem .4rem;border-radius:6px}
-        select{width:100%;padding:.5rem .7rem;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:.82rem;background:var(--surface);color:var(--text);cursor:pointer}
-        select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(27,107,74,.1)}
+        input[type=range]{flex:1;-webkit-appearance:none;appearance:none;height:6px;background:var(--surface-alt);border-radius:3px;outline:none;cursor:pointer}
+        input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--primary);cursor:pointer;box-shadow:0 2px 6px rgba(37,99,235,.35);border:2px solid #fff}
+        input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--primary);cursor:pointer;box-shadow:0 2px 6px rgba(37,99,235,.35);border:2px solid #fff}
+        .range-value{min-width:3rem;text-align:center;font-weight:700;font-size:.95rem;color:var(--primary-dark);background:var(--primary-lighter);padding:.3rem .55rem;border-radius:8px;border:1px solid var(--primary-light)}
+        select{width:100%;padding:.55rem .8rem;border:1px solid var(--border-strong);border-radius:8px;font-family:inherit;font-size:.85rem;background:var(--surface);color:var(--text);cursor:pointer;font-weight:500;transition:all .15s}
+        select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+        select:hover{border-color:var(--primary)}
 
-        .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:.35rem 0}
-        .toggle-label{font-size:.8rem;font-weight:500}
-        .toggle{position:relative;width:44px;height:24px}.toggle input{opacity:0;width:0;height:0}
-        .toggle-slider{position:absolute;cursor:pointer;inset:0;background:var(--border);border-radius:24px;transition:.3s}
+        /* TOGGLE */
+        .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:.4rem 0;gap:.6rem}
+        .toggle-label-wrap{display:flex;align-items:center;gap:.4rem;flex:1}
+        .toggle-label{font-size:.83rem;font-weight:600}
+        .toggle{position:relative;width:44px;height:24px;flex-shrink:0}
+        .toggle input{opacity:0;width:0;height:0}
+        .toggle-slider{position:absolute;cursor:pointer;inset:0;background:var(--border-strong);border-radius:24px;transition:.3s}
         .toggle-slider::before{content:'';position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.3s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
-        .toggle input:checked+.toggle-slider{background:var(--accent)}
+        .toggle input:checked+.toggle-slider{background:var(--primary)}
         .toggle input:checked+.toggle-slider::before{transform:translateX(20px)}
 
-        .predict-btn{width:100%;padding:.9rem;background:linear-gradient(135deg,var(--accent-dark),var(--accent));color:#fff;border:none;border-radius:var(--radius);font-family:inherit;font-size:1rem;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:var(--shadow-md)}
-        .predict-btn:hover{transform:translateY(-1px);box-shadow:var(--shadow-lg)}
+        /* PREDICT BUTTON */
+        .predict-btn{width:100%;padding:1.05rem;background:linear-gradient(135deg,var(--primary-dark),var(--primary));color:#fff;border:none;border-radius:var(--radius);font-family:inherit;font-size:1.02rem;font-weight:700;cursor:pointer;transition:all .25s;box-shadow:0 4px 14px rgba(37,99,235,.25);letter-spacing:.01em}
+        .predict-btn:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(37,99,235,.32)}
+        .predict-btn:active{transform:translateY(0)}
 
-        .results{margin-top:1.5rem;animation:fadeUp .5s ease}
-        @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-        .result-comparison{display:grid;grid-template-columns:1fr auto 1fr;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-md)}
-        @media(max-width:600px){.result-comparison{grid-template-columns:1fr}.result-divider{display:none}}
-        .result-panel{padding:1.3rem;text-align:center}
-        .result-panel-title{font-size:.68rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.7rem}
-        .prob-ring{position:relative;width:120px;height:120px;margin:0 auto .8rem}
+        /* ============== RESULTS ============== */
+        .results{margin-top:1.8rem;animation:fadeUp .5s ease}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+        /* MAIN RESULT — semáforo gigante */
+        .main-result{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.8rem 1.5rem 1.6rem;box-shadow:var(--shadow-md);margin-bottom:1.2rem;position:relative;overflow:hidden}
+        .main-result::before{content:'';position:absolute;left:0;top:0;bottom:0;width:6px}
+        .main-result.green::before{background:var(--green)}
+        .main-result.yellow::before{background:var(--yellow)}
+        .main-result.red::before{background:var(--red)}
+
+        .main-result-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.4rem;flex-wrap:wrap;gap:.6rem}
+        .main-result-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted)}
+        .risk-badge{display:inline-flex;align-items:center;gap:.4rem;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.35rem .8rem;border-radius:100px}
+        .risk-badge.green{background:var(--green-light);color:var(--green-dark)}
+        .risk-badge.yellow{background:var(--yellow-light);color:var(--yellow-dark)}
+        .risk-badge.red{background:var(--red-light);color:var(--red-dark)}
+        .risk-badge::before{content:'';width:8px;height:8px;border-radius:50%}
+        .risk-badge.green::before{background:var(--green);box-shadow:0 0 6px var(--green)}
+        .risk-badge.yellow::before{background:var(--yellow);box-shadow:0 0 6px var(--yellow)}
+        .risk-badge.red::before{background:var(--red);box-shadow:0 0 6px var(--red)}
+
+        .main-prob-display{text-align:center;margin-bottom:1.4rem}
+        .main-prob-value{font-size:clamp(3.5rem,11vw,5.5rem);font-weight:800;line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+        .main-prob-value.green{color:var(--green-dark)}
+        .main-prob-value.yellow{color:var(--yellow-dark)}
+        .main-prob-value.red{color:var(--red-dark)}
+        .main-prob-sublabel{font-size:.95rem;color:var(--text-muted);margin-top:.3rem;font-weight:500}
+        .main-prob-context{font-size:.78rem;color:var(--text-muted);margin-top:.15rem;font-weight:400}
+
+        /* RISK SPECTRUM BAR */
+        .risk-spectrum{margin-top:1.2rem}
+        .risk-spectrum-label{font-size:.7rem;font-weight:600;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center}
+        .risk-bar-wrap{position:relative;padding-top:8px}
+        .risk-bar{height:14px;border-radius:100px;background:linear-gradient(90deg,var(--green) 0%,#84CC16 25%,var(--yellow) 50%,#F97316 75%,var(--red) 100%);position:relative;box-shadow:inset 0 1px 3px rgba(0,0,0,.08)}
+        .risk-marker{position:absolute;top:0;width:6px;height:30px;background:var(--text);border:2px solid #fff;border-radius:3px;box-shadow:0 0 0 1px rgba(15,23,42,.3),0 2px 6px rgba(0,0,0,.2);transition:left .8s cubic-bezier(.4,0,.2,1);transform:translateX(-50%)}
+        .risk-marker::after{content:'';position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid var(--text)}
+        .risk-spectrum-labels{display:flex;justify-content:space-between;font-size:.7rem;color:var(--text-muted);margin-top:.6rem;font-weight:500}
+        .risk-spectrum-labels span{flex:1;text-align:center}
+        .risk-spectrum-labels span:first-child{text-align:left;color:var(--green-dark)}
+        .risk-spectrum-labels span:last-child{text-align:right;color:var(--red-dark)}
+
+        /* COMPARISON SECTION */
+        .comparison-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.4rem;box-shadow:var(--shadow-sm);margin-bottom:1.2rem}
+        .comparison-title{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--primary-dark);margin-bottom:1.1rem;padding-bottom:.55rem;border-bottom:2px solid var(--primary-lighter)}
+        .comparison-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+        @media(max-width:540px){.comparison-grid{grid-template-columns:1fr}}
+        .comparison-panel{padding:1rem;border-radius:var(--radius);background:var(--surface-alt);border:1px solid var(--border);text-align:center;transition:all .25s}
+        .comparison-panel.highlight{background:var(--primary-lighter);border-color:var(--primary-light)}
+        .comparison-panel-label{font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.7rem}
+        .comparison-panel.highlight .comparison-panel-label{color:var(--primary-dark)}
+        .prob-ring{position:relative;width:110px;height:110px;margin:0 auto .5rem}
         .prob-ring svg{transform:rotate(-90deg)}
         .prob-ring-bg{fill:none;stroke:var(--surface-alt);stroke-width:8}
-        .prob-ring-fill{fill:none;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 1s ease}
+        .comparison-panel.highlight .prob-ring-bg{stroke:rgba(37,99,235,.12)}
+        .prob-ring-fill{fill:none;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 1s ease,stroke .3s ease}
         .prob-ring-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-        .prob-value{font-family:'DM Serif Display',serif;font-size:1.9rem;line-height:1}
-        .prob-label{font-size:.68rem;color:var(--text-muted);margin-top:.15rem}
-        .result-divider{width:1px;background:var(--border)}
+        .prob-value{font-size:1.7rem;font-weight:700;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+        .prob-label{font-size:.66rem;color:var(--text-muted);margin-top:.15rem;font-weight:500}
 
-        .benefit-card{margin-top:1rem;padding:1.1rem;border-radius:var(--radius);text-align:center}
-        .benefit-card.positive{background:var(--accent-light);border:1px solid #B7D9C7}
-        .benefit-card.negative{background:var(--danger-light);border:1px solid #E8C5C2}
-        .benefit-card.neutral{background:var(--blue-light);border:1px solid #C5D5F0}
-        .benefit-value{font-family:'DM Serif Display',serif;font-size:1.7rem;line-height:1;margin-bottom:.3rem}
-        .benefit-card.positive .benefit-value{color:var(--accent-dark)}
-        .benefit-card.negative .benefit-value{color:var(--danger)}
-        .benefit-card.neutral .benefit-value{color:var(--blue)}
-        .benefit-text{font-size:.8rem;color:var(--text-muted)}
-        .benefit-recommendation{margin-top:.7rem;padding-top:.7rem;border-top:1px solid rgba(0,0,0,.08);font-size:.83rem;font-weight:600}
+        /* FACTORS */
+        .factors-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.4rem;box-shadow:var(--shadow-sm);margin-bottom:1.2rem}
+        .factors-title{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--primary-dark);margin-bottom:.7rem;padding-bottom:.55rem;border-bottom:2px solid var(--primary-lighter)}
+        .factors-subtitle{font-size:.75rem;color:var(--text-muted);margin-bottom:1rem}
+        .factor-row{display:flex;align-items:center;gap:.6rem;margin-bottom:.5rem;font-size:.78rem}
+        .factor-name{width:140px;flex-shrink:0;text-align:right;color:var(--text);font-size:.76rem;font-weight:500}
+        @media(max-width:540px){.factor-name{width:100px;font-size:.7rem}}
+        .factor-bar-container{flex:1;height:18px;position:relative;background:var(--surface-alt);border-radius:4px}
+        .factor-bar-center{position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--border-strong);z-index:1}
+        .factor-bar{position:absolute;height:14px;top:2px;border-radius:3px;transition:width .7s cubic-bezier(.4,0,.2,1)}
+        .factor-bar.positive{left:50%;background:linear-gradient(90deg,#FCA5A5,var(--red))}
+        .factor-bar.negative{right:50%;background:linear-gradient(270deg,#86EFAC,var(--green))}
+        .factor-impact{width:52px;text-align:right;font-weight:700;font-size:.74rem;font-variant-numeric:tabular-nums}
+        .factor-impact.pos{color:var(--red-dark)}
+        .factor-impact.neg{color:var(--green-dark)}
 
-        .factors-card{margin-top:1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.3rem;box-shadow:var(--shadow-sm)}
-        .factor-row{display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem;font-size:.78rem}
-        .factor-name{width:150px;flex-shrink:0;text-align:right;color:var(--text-muted);font-size:.74rem}
-        .factor-bar-container{flex:1;height:16px;position:relative}
-        .factor-bar-center{position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--border)}
-        .factor-bar{position:absolute;height:12px;border-radius:3px;transition:width .6s ease}
-        .factor-bar.positive{left:50%;background:linear-gradient(90deg,#4CAF50,#2E7D32)}
-        .factor-bar.negative{right:50%;background:linear-gradient(270deg,#EF5350,#C62828)}
-        .factor-impact{width:48px;text-align:right;font-weight:600;font-size:.72rem}
-        .factor-impact.pos{color:var(--accent)}.factor-impact.neg{color:var(--danger)}
+        /* MODEL CONFIDENCE — visualización del AUC */
+        .model-confidence{background:linear-gradient(135deg,var(--primary-lighter),#F0F9FF);border:1px solid var(--primary-light);border-radius:var(--radius-lg);padding:1.2rem 1.3rem;margin-bottom:1.2rem}
+        .mc-header{display:flex;align-items:center;gap:.5rem;margin-bottom:.7rem}
+        .mc-icon{width:24px;height:24px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700}
+        .mc-title{font-size:.85rem;font-weight:700;color:var(--primary-darker)}
+        .mc-text{font-size:.78rem;color:#1E3A8A;line-height:1.55;margin-bottom:.9rem}
+        .mc-text strong{font-weight:600}
+        .mc-bar-wrap{position:relative}
+        .mc-bar{height:8px;border-radius:100px;background:linear-gradient(90deg,#FCA5A5 0%,#FCD34D 30%,#86EFAC 60%,var(--green) 100%);position:relative}
+        .mc-marker{position:absolute;top:-3px;width:4px;height:14px;background:var(--primary-darker);border-radius:2px;box-shadow:0 0 0 2px #fff;transform:translateX(-50%)}
+        .mc-scale{display:flex;justify-content:space-between;font-size:.62rem;color:var(--primary-darker);margin-top:.4rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;opacity:.7}
 
-        .footer{margin-top:2rem;padding:1.2rem;text-align:center;font-size:.72rem;color:var(--text-muted);border-top:1px solid var(--border)}
-        .footer-model{display:inline-flex;align-items:center;gap:.5rem;background:var(--surface-alt);padding:.25rem .7rem;border-radius:100px;margin-top:.5rem;font-size:.68rem}
+        /* FOOTER */
+        .footer{margin-top:2rem;padding:1.4rem;text-align:center;font-size:.74rem;color:var(--text-muted);border-top:1px solid var(--border)}
+        .footer-model{display:inline-flex;align-items:center;gap:.5rem;background:var(--surface);border:1px solid var(--border);padding:.35rem .85rem;border-radius:100px;margin-top:.6rem;font-size:.7rem;font-weight:500}
+        .footer-model::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--primary)}
     </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <div class="header"><div class="header-inner">
     <div class="header-top">
         <div class="header-badge" data-i18n="header_badge"></div>
@@ -119,34 +248,51 @@
 
 <div class="main">
     <div class="disclaimer">
-        <span style="font-size:1rem;flex-shrink:0">&#9888;&#65039;</span>
+        <span class="disclaimer-icon">&#9888;&#65039;</span>
         <div data-i18n-html="disclaimer"></div>
     </div>
 
+    <!-- FORM -->
     <div class="form-grid">
         <!-- PACIENTE -->
         <div class="card">
             <div class="card-title" data-i18n-html="card_patient"></div>
+
             <div class="field">
-                <label data-i18n="lbl_age"></label>
+                <div class="label-row">
+                    <label data-i18n="lbl_age"></label>
+                    <button class="info-btn" onclick="showInfo('age')" aria-label="Info">i</button>
+                </div>
                 <div class="input-row">
                     <input type="range" id="age" min="50" max="96" value="76" oninput="uv('age')">
                     <span class="range-value" id="age-val">76</span>
                 </div>
             </div>
+
             <div class="field">
-                <label>IMC (kg/m&sup2;)</label>
+                <div class="label-row">
+                    <label>IMC (kg/m&sup2;)</label>
+                    <button class="info-btn" onclick="showInfo('imc')" aria-label="Info">i</button>
+                </div>
                 <div class="input-row">
                     <input type="range" id="imc" min="15" max="45" value="26" step="0.5" oninput="uv('imc')">
                     <span class="range-value" id="imc-val">26</span>
                 </div>
             </div>
+
             <div class="field">
-                <label data-i18n="lbl_mfi"></label>
+                <div class="label-row">
+                    <label data-i18n="lbl_mfi"></label>
+                    <button class="info-btn" onclick="showInfo('mfi')" aria-label="Info">i</button>
+                </div>
                 <select id="mfi" data-i18n-opts="opts_mfi"></select>
             </div>
+
             <div class="field">
-                <label>Health Status</label>
+                <div class="label-row">
+                    <label>Health Status</label>
+                    <button class="info-btn" onclick="showInfo('hs')" aria-label="Info">i</button>
+                </div>
                 <div class="hint" data-i18n="hint_hs"></div>
                 <select id="hs" data-i18n-opts="opts_hs"></select>
             </div>
@@ -155,28 +301,45 @@
         <!-- FRACTURA -->
         <div class="card">
             <div class="card-title" data-i18n-html="card_fracture"></div>
+
             <div class="field">
-                <label data-i18n="lbl_gs"></label>
+                <div class="label-row">
+                    <label data-i18n="lbl_gs"></label>
+                    <button class="info-btn" onclick="showInfo('gs')" aria-label="Info">i</button>
+                </div>
                 <select id="gs" data-i18n-opts="opts_gs"></select>
             </div>
+
             <div class="field">
-                <label data-i18n="lbl_uh"></label>
+                <div class="label-row">
+                    <label data-i18n="lbl_uh"></label>
+                    <button class="info-btn" onclick="showInfo('uh')" aria-label="Info">i</button>
+                </div>
                 <div class="hint" data-i18n="hint_uh"></div>
                 <div class="input-row">
                     <input type="range" id="uh" min="4" max="194" value="78" oninput="uv('uh')">
                     <span class="range-value" id="uh-val">78</span>
                 </div>
             </div>
+
             <div class="field">
-                <label data-i18n="lbl_mech"></label>
+                <div class="label-row">
+                    <label data-i18n="lbl_mech"></label>
+                    <button class="info-btn" onclick="showInfo('mech')" aria-label="Info">i</button>
+                </div>
                 <select id="mech" data-i18n-opts="opts_mech"></select>
             </div>
+
             <div class="field">
                 <div class="toggle-row">
-                    <span class="toggle-label" data-i18n="lbl_defprog"></span>
+                    <div class="toggle-label-wrap">
+                        <span class="toggle-label" data-i18n="lbl_defprog"></span>
+                        <button class="info-btn" onclick="showInfo('defprog')" aria-label="Info">i</button>
+                    </div>
                     <label class="toggle"><input type="checkbox" id="defprog"><span class="toggle-slider"></span></label>
                 </div>
             </div>
+
             <div style="margin-top:1.2rem;padding-top:.8rem;border-top:1px solid var(--border)">
                 <div class="card-title" style="border:none;padding:0;margin-bottom:.4rem" data-i18n-html="card_treatment"></div>
                 <div class="hint" data-i18n="hint_treatment"></div>
@@ -188,61 +351,122 @@
 
     <!-- RESULTS -->
     <div id="results" class="results" style="display:none">
-        <div class="result-comparison">
-            <div class="result-panel">
-                <div class="result-panel-title" data-i18n="res_no_cement"></div>
-                <div class="prob-ring">
-                    <svg viewBox="0 0 120 120">
-                        <circle class="prob-ring-bg" cx="60" cy="60" r="52"/>
-                        <circle id="ring-c" class="prob-ring-fill" cx="60" cy="60" r="52" stroke="#94A3B8" stroke-dasharray="326.73" stroke-dashoffset="326.73"/>
-                    </svg>
-                    <div class="prob-ring-text">
-                        <span class="prob-value" id="prob-c">&mdash;</span>
-                        <span class="prob-label" data-i18n="res_favorable"></span>
-                    </div>
+
+        <!-- MAIN RESULT — semáforo gigante con barra espectro -->
+        <div class="main-result" id="main-result">
+            <div class="main-result-header">
+                <div class="main-result-label" data-i18n="main_result_label"></div>
+                <div class="risk-badge" id="risk-badge">
+                    <span id="risk-badge-text"></span>
                 </div>
             </div>
-            <div class="result-divider"></div>
-            <div class="result-panel">
-                <div class="result-panel-title" data-i18n="res_with_cement"></div>
-                <div class="prob-ring">
-                    <svg viewBox="0 0 120 120">
-                        <circle class="prob-ring-bg" cx="60" cy="60" r="52"/>
-                        <circle id="ring-s" class="prob-ring-fill" cx="60" cy="60" r="52" stroke="#1B6B4A" stroke-dasharray="326.73" stroke-dashoffset="326.73"/>
-                    </svg>
-                    <div class="prob-ring-text">
-                        <span class="prob-value" id="prob-s">&mdash;</span>
-                        <span class="prob-label" data-i18n="res_favorable"></span>
+
+            <div class="main-prob-display">
+                <div class="main-prob-value" id="main-prob-value">&mdash;</div>
+                <div class="main-prob-sublabel" data-i18n="main_prob_sublabel"></div>
+                <div class="main-prob-context" id="main-prob-context"></div>
+            </div>
+
+            <div class="risk-spectrum">
+                <div class="risk-spectrum-label">
+                    <span data-i18n="risk_spectrum_label"></span>
+                </div>
+                <div class="risk-bar-wrap">
+                    <div class="risk-bar"></div>
+                    <div class="risk-marker" id="risk-marker" style="left:50%"></div>
+                </div>
+                <div class="risk-spectrum-labels">
+                    <span data-i18n="risk_low"></span>
+                    <span data-i18n="risk_moderate"></span>
+                    <span data-i18n="risk_high"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- COMPARISON -->
+        <div class="comparison-section">
+            <div class="comparison-title" data-i18n="comparison_title"></div>
+            <div class="comparison-grid">
+                <div class="comparison-panel" id="panel-c">
+                    <div class="comparison-panel-label" data-i18n="res_no_cement"></div>
+                    <div class="prob-ring">
+                        <svg viewBox="0 0 120 120">
+                            <circle class="prob-ring-bg" cx="60" cy="60" r="52"/>
+                            <circle id="ring-c" class="prob-ring-fill" cx="60" cy="60" r="52" stroke="#94A3B8" stroke-dasharray="326.73" stroke-dashoffset="326.73"/>
+                        </svg>
+                        <div class="prob-ring-text">
+                            <span class="prob-value" id="prob-c">&mdash;</span>
+                            <span class="prob-label" data-i18n="res_unfavorable"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="comparison-panel highlight" id="panel-s">
+                    <div class="comparison-panel-label" data-i18n="res_with_cement"></div>
+                    <div class="prob-ring">
+                        <svg viewBox="0 0 120 120">
+                            <circle class="prob-ring-bg" cx="60" cy="60" r="52"/>
+                            <circle id="ring-s" class="prob-ring-fill" cx="60" cy="60" r="52" stroke="#2563EB" stroke-dasharray="326.73" stroke-dashoffset="326.73"/>
+                        </svg>
+                        <div class="prob-ring-text">
+                            <span class="prob-value" id="prob-s">&mdash;</span>
+                            <span class="prob-label" data-i18n="res_unfavorable"></span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div id="bc" class="benefit-card positive">
-            <div class="benefit-value" id="bv">&mdash;</div>
-            <div class="benefit-text" id="bt"></div>
-            <div class="benefit-recommendation" id="br"></div>
-        </div>
-
+        <!-- VARIABLE CONTRIBUTIONS -->
         <div class="factors-card">
-            <div class="card-title" data-i18n-html="res_factors_title"></div>
+            <div class="factors-title" data-i18n-html="res_factors_title"></div>
+            <div class="factors-subtitle" data-i18n="res_factors_subtitle"></div>
             <div id="fc"></div>
+        </div>
+
+        <!-- MODEL CONFIDENCE -->
+        <div class="model-confidence">
+            <div class="mc-header">
+                <div class="mc-icon">i</div>
+                <div class="mc-title" data-i18n="mc_title"></div>
+            </div>
+            <div class="mc-text" data-i18n-html="mc_text"></div>
+            <div class="mc-bar-wrap">
+                <div class="mc-bar">
+                    <div class="mc-marker" style="left:41.2%"></div>
+                </div>
+                <div class="mc-scale">
+                    <span data-i18n="mc_random"></span>
+                    <span data-i18n="mc_moderate"></span>
+                    <span data-i18n="mc_good"></span>
+                    <span data-i18n="mc_excellent"></span>
+                </div>
+            </div>
         </div>
     </div>
 
     <div class="footer">
         <div>Mart&iacute;nez-N&uacute;&ntilde;ez P, Guti&eacute;rrez-Gonz&aacute;lez R. <span data-i18n="footer_desc"></span><br>TFM &mdash; Universidad Europea &mdash; 2025/2026</div>
-        <div class="footer-model">&#128208; Logistic Regression &middot; Platt Calibration &middot; AUC 0.706 &middot; n=482 &middot; 9 features &middot; v5.1</div>
+        <div class="footer-model">Logistic Regression &middot; Platt Calibration &middot; AUC 0.706 &middot; n=482 &middot; 9 features &middot; v6.1</div>
     </div>
+</div>
+
+<!-- TOOLTIP MODAL -->
+<div class="tooltip-overlay" id="tooltip-overlay" onclick="closeInfo()"></div>
+<div class="tooltip" id="tooltip">
+    <div class="tooltip-header">
+        <div class="tooltip-title" id="tooltip-title"></div>
+        <button class="tooltip-close" onclick="closeInfo()" aria-label="Close">&times;</button>
+    </div>
+    <div class="tooltip-body" id="tooltip-body"></div>
 </div>
 
 <script>
 // ===================================================================
-// i18n — all translatable strings
+// i18n — All translatable strings
 // ===================================================================
 const I = {
 es: {
-    header_badge: "Herramienta de Investigaci\u00f3n \u2014 v5.1",
+    header_badge: "Herramienta de Investigaci\u00f3n \u2014 v6.1",
     header_title: "Predictor de Resultado en Fracturas<br>Osteopor\u00f3ticas Toracolumbares",
     header_subtitle: "Modelo de apoyo a la decisi\u00f3n cl\u00ednica basado en regresi\u00f3n log\u00edstica con calibraci\u00f3n Platt y 9 variables predictoras",
     patients: "pacientes", variables: "variables",
@@ -251,39 +475,100 @@ es: {
     card_patient: "&#128100; Paciente",
     card_fracture: "&#129460; Fractura",
     card_treatment: "&#128295; Tratamiento",
-    lbl_age: "Edad",
+    lbl_age: "Edad (a\u00f1os)",
     lbl_mfi: "\u00cdndice de Fragilidad (mFI)",
     hint_hs: "Estado funcional global",
-    lbl_gs: "Clasificaci\u00f3n OF (Morfolog\u00eda de la fractura)",
+    lbl_gs: "Clasificaci\u00f3n OF (Morfolog\u00eda fractura)",
     lbl_uh: "Unidades Hounsfield (UH)",
     hint_uh: "Densidad \u00f3sea en TC \u2014 mayor = mejor calidad",
     lbl_mech: "Mecanismo lesional",
     lbl_defprog: "Progresi\u00f3n de la deformidad",
     hint_treatment: "El modelo compara autom\u00e1ticamente ambos escenarios (conservador vs cementaci\u00f3n vertebral).",
     btn_predict: "Calcular Predicci\u00f3n Comparativa",
-    res_no_cement: "Sin Cementaci\u00f3n",
-    res_with_cement: "Con Cementaci\u00f3n Vertebral",
-    res_favorable: "Resultado favorable",
-    res_factors_title: "&#128202; Contribuci\u00f3n de cada Variable (escenario quir\u00fargico)",
+
+    main_result_label: "Riesgo estimado con cementaci\u00f3n",
+    main_prob_sublabel: "de resultado cl\u00ednico desfavorable",
+    main_prob_context: "",
+    risk_spectrum_label: "Posici\u00f3n del paciente en el espectro de riesgo",
+    risk_high: "Riesgo alto",
+    risk_moderate: "Incierto",
+    risk_low: "Riesgo bajo",
+    risk_badge_high: "Riesgo Alto",
+    risk_badge_mod: "Riesgo Moderado",
+    risk_badge_low: "Riesgo Bajo",
+
+    comparison_title: "Comparaci\u00f3n de escenarios cl\u00ednicos",
+    res_no_cement: "Sin cementaci\u00f3n",
+    res_with_cement: "Con cementaci\u00f3n vertebral",
+    res_unfavorable: "Desfavorable",
+
+    res_factors_title: "&#128202; Contribuci\u00f3n de cada variable",
+    res_factors_subtitle: "Cu\u00e1nto aumenta (rojo) o reduce (verde) cada variable el riesgo de resultado desfavorable, en el escenario con cementaci\u00f3n.",
+
+    mc_title: "Fiabilidad del modelo \u2014 a tener en cuenta",
+    mc_text: "El modelo presenta un AUC de <strong>0.706</strong>, lo que indica una capacidad predictiva <strong>moderada</strong>. Es \u00fatil como apoyo para confirmar sospechas cl\u00ednicas, pero <strong>no debe emplearse de forma aut\u00f3noma</strong> para decisiones quir\u00fargicas. Los resultados deben siempre integrarse con el juicio cl\u00ednico, exploraci\u00f3n f\u00edsica y otros datos del paciente.",
+    mc_random: "Aleatorio",
+    mc_moderate: "Moderado",
+    mc_good: "Bueno",
+    mc_excellent: "Excelente",
+
     footer_desc: "Modelo de ML explicable para OVFs toracolumbares.",
-    benefit_high: "La cementaci\u00f3n se asocia con +{bp} puntos porcentuales en la probabilidad de resultado favorable.",
-    rec_high: "\u2192 El modelo sugiere beneficio potencial de la cementaci\u00f3n vertebral",
-    benefit_mod: "Incremento moderado de {bp} pp. Beneficio incierto.",
-    rec_mod: "\u2192 Considerar factores cl\u00ednicos adicionales",
-    benefit_low: "Beneficio estimado m\u00ednimo ({bp} pp) para este perfil.",
-    rec_low: "\u2192 Valorar tratamiento conservador",
+
     opts_mfi: [["0","No fr\u00e1gil"],["1","Pre-fr\u00e1gil","selected"],["2","Fr\u00e1gil"]],
     opts_hs: [["-2","-2 \u2014 Muy deteriorado"],["-1","-1 \u2014 Deteriorado"],["0","0 \u2014 Basal","selected"]],
-    opts_gs: [["1","OF 1 \u2014 Sin deformidad"],["2","OF 2 \u2014 Deformidad un platillo con muro posterior \u00edntegro"],["3","OF 3 \u2014 Deformidad un platillo con afectaci\u00f3n muro posterior","selected"],["4","OF 4 \u2014 Deformidad ambos platillos"],["5","OF 5 \u2014 Lesi\u00f3n de ligamentos anterior o posterior"]],
+    opts_gs: [["1","OF 1 \u2014 Sin deformidad"],["2","OF 2 \u2014 Deformidad un platillo, muro posterior \u00edntegro"],["3","OF 3 \u2014 Deformidad un platillo, muro posterior afectado","selected"],["4","OF 4 \u2014 Deformidad ambos platillos"],["5","OF 5 \u2014 Lesi\u00f3n ligamentaria anterior o posterior"]],
     opts_mech: [["0","Traumatismo baja energ\u00eda"],["1","Sin traumatismo (espont\u00e1neo)"]],
+
     factor_labels: [
         "Edad","Cementaci\u00f3n Vertebral","Sin traumatismo",
         "Health Status","Progr. deformidad","IMC",
         "Fragilidad (mFI)","Tipo Fractura (OF)","Unidades Hounsfield"
-    ]
+    ],
+
+    info: {
+        age: {
+            title: "Edad",
+            body: "Edad cronol\u00f3gica del paciente en a\u00f1os cumplidos.<br><br><strong>Rango en cohorte:</strong> 50\u201396 a\u00f1os.<br><strong>Medida:</strong> dato demogr\u00e1fico al ingreso."
+        },
+        imc: {
+            title: "\u00cdndice de Masa Corporal (IMC)",
+            body: "<strong>F\u00f3rmula:</strong> peso (kg) / altura\u00b2 (m\u00b2).<br><br><strong>Calc\u00falalo previamente</strong> con peso y talla del paciente. Rango habitual: 15\u201345 kg/m\u00b2.<br><br>Ejemplo: 70 kg / (1.65 m)\u00b2 = 25.7 kg/m\u00b2."
+        },
+        mfi: {
+            title: "Modified Fragility Index (mFI)",
+            body: "Suma del n\u00famero de las siguientes condiciones:<br><br>\u2022 Hipertensi\u00f3n arterial<br>\u2022 Diabetes Mellitus<br>\u2022 EPOC<br>\u2022 Insuficiencia card\u00edaca congestiva<br>\u2022 Dependencia funcional para AVD<br><br><strong>0 \u2014 No fr\u00e1gil:</strong> &lt;2 condiciones<br><strong>1 \u2014 Pre-fr\u00e1gil:</strong> 2\u20133 condiciones<br><strong>2 \u2014 Fr\u00e1gil:</strong> \u22654 condiciones"
+        },
+        hs: {
+            title: "Health Status (estado funcional)",
+            body: "Evaluaci\u00f3n cl\u00ednica del estado funcional global del paciente:<br><br><strong>0 \u2014 Basal:</strong> aut\u00f3nomo, AVD conservadas.<br><strong>-1 \u2014 Deteriorado:</strong> necesita ayuda parcial, deterioro leve-moderado.<br><strong>-2 \u2014 Muy deteriorado:</strong> dependencia importante, deterioro severo."
+        },
+        gs: {
+            title: "Clasificaci\u00f3n OF (Schnake et al., 2018)",
+            body: "Clasificaci\u00f3n morfol\u00f3gica de fracturas osteopor\u00f3ticas, evaluada en TC sagital:<br><br><strong>OF 1:</strong> Sin deformidad vertebral.<br><strong>OF 2:</strong> Deformidad de un platillo, muro posterior \u00edntegro.<br><strong>OF 3:</strong> Deformidad de un platillo con afectaci\u00f3n del muro posterior.<br><strong>OF 4:</strong> Deformidad de ambos platillos (vertebral plana o split).<br><strong>OF 5:</strong> Lesi\u00f3n ligamentaria anterior o posterior."
+        },
+        uh: {
+            title: "Unidades Hounsfield (UH)",
+            body: "Medida de densidad \u00f3sea en TC.<br><br><strong>C\u00f3mo medirlas:</strong><br>\u2022 ROI circular en cuerpo vertebral L1<br>\u2022 Corte axial central<br>\u2022 Evitar corticales y \u00e1reas escler\u00f3ticas<br>\u2022 Tama\u00f1o ROI: ~150\u2013200 mm\u00b2<br><br><strong>Interpretaci\u00f3n:</strong><br>\u2022 UH &lt; 110: sugiere osteoporosis<br>\u2022 Mayor valor = mejor calidad \u00f3sea"
+        },
+        mech: {
+            title: "Mecanismo lesional",
+            body: "<strong>Traumatismo de baja energ\u00eda:</strong> ca\u00edda desde altura propia, esfuerzo m\u00ednimo identificable.<br><br><strong>Sin traumatismo (espont\u00e1neo):</strong> aparici\u00f3n del dolor sin evento identificable, fractura insuficiencia.<br><br>Variable cl\u00ednicamente relevante: las fracturas espont\u00e1neas suelen asociarse a peor pron\u00f3stico."
+        },
+        defprog: {
+            title: "Progresi\u00f3n de la deformidad",
+            body: "Evoluci\u00f3n radiol\u00f3gica desfavorable durante el seguimiento.<br><br><strong>Criterios:</strong><br>\u2022 Aumento de cifosis local &gt; 5\u00b0<br>\u2022 P\u00e9rdida adicional de altura vertebral<br>\u2022 Comparativa entre rx inicial y rx de seguimiento (\u22483 meses)<br><br>Activar si se ha documentado al menos uno de los criterios."
+        }
+    },
+
+    benefit_high: "La cementaci\u00f3n se asocia a una reducci\u00f3n de {bp} pp en el riesgo de resultado desfavorable.",
+    rec_high: "\u2192 El modelo sugiere beneficio potencial de la cementaci\u00f3n vertebral",
+    benefit_mod: "Reducci\u00f3n moderada del riesgo de {bp} pp. Beneficio incierto.",
+    rec_mod: "\u2192 Considerar factores cl\u00ednicos adicionales",
+    benefit_low: "Diferencia estimada m\u00ednima entre escenarios ({bp} pp) para este perfil.",
+    rec_low: "\u2192 Valorar tratamiento conservador"
 },
 en: {
-    header_badge: "Research Tool \u2014 v5.1",
+    header_badge: "Research Tool \u2014 v6.1",
     header_title: "Outcome Predictor for Thoracolumbar<br>Osteoporotic Fractures",
     header_subtitle: "Clinical decision support model based on logistic regression with Platt calibration and 9 predictor variables",
     patients: "patients", variables: "variables",
@@ -292,7 +577,7 @@ en: {
     card_patient: "&#128100; Patient",
     card_fracture: "&#129460; Fracture",
     card_treatment: "&#128295; Treatment",
-    lbl_age: "Age",
+    lbl_age: "Age (years)",
     lbl_mfi: "Frailty Index (mFI)",
     hint_hs: "Overall functional status",
     lbl_gs: "OF Classification (Fracture morphology)",
@@ -302,26 +587,87 @@ en: {
     lbl_defprog: "Deformity progression",
     hint_treatment: "The model automatically compares both scenarios (conservative vs vertebral cementation).",
     btn_predict: "Calculate Comparative Prediction",
-    res_no_cement: "Without Cementation",
-    res_with_cement: "With Vertebral Cementation",
-    res_favorable: "Favorable outcome",
-    res_factors_title: "&#128202; Variable Contribution (surgical scenario)",
+
+    main_result_label: "Estimated risk with cementation",
+    main_prob_sublabel: "of unfavorable clinical outcome",
+    main_prob_context: "",
+    risk_spectrum_label: "Patient position in the risk spectrum",
+    risk_high: "High risk",
+    risk_moderate: "Uncertain",
+    risk_low: "Low risk",
+    risk_badge_high: "High Risk",
+    risk_badge_mod: "Moderate Risk",
+    risk_badge_low: "Low Risk",
+
+    comparison_title: "Comparison of clinical scenarios",
+    res_no_cement: "Without cementation",
+    res_with_cement: "With vertebral cementation",
+    res_unfavorable: "Unfavorable",
+
+    res_factors_title: "&#128202; Variable contribution",
+    res_factors_subtitle: "How much each variable raises (red) or lowers (green) the risk of an unfavorable outcome, in the surgical scenario.",
+
+    mc_title: "Model reliability \u2014 important note",
+    mc_text: "The model achieves an AUC of <strong>0.706</strong>, indicating <strong>moderate</strong> predictive performance. It is useful as a tool to support clinical suspicion but <strong>should not be used autonomously</strong> for surgical decisions. Outputs must always be integrated with clinical judgment, physical examination and other patient data.",
+    mc_random: "Random",
+    mc_moderate: "Moderate",
+    mc_good: "Good",
+    mc_excellent: "Excellent",
+
     footer_desc: "Explainable ML model for thoracolumbar OVFs.",
-    benefit_high: "Cementation is associated with +{bp} percentage points in the probability of a favorable outcome.",
-    rec_high: "\u2192 The model suggests potential benefit from vertebral cementation",
-    benefit_mod: "Moderate increase of {bp} pp. Uncertain benefit.",
-    rec_mod: "\u2192 Consider additional clinical factors",
-    benefit_low: "Estimated minimal benefit ({bp} pp) for this profile.",
-    rec_low: "\u2192 Consider conservative treatment",
+
     opts_mfi: [["0","Not frail"],["1","Pre-frail","selected"],["2","Frail"]],
     opts_hs: [["-2","-2 \u2014 Very deteriorated"],["-1","-1 \u2014 Deteriorated"],["0","0 \u2014 Baseline","selected"]],
-    opts_gs: [["1","OF 1 \u2014 No deformity"],["2","OF 2 \u2014 Single endplate deformity, intact posterior wall"],["3","OF 3 \u2014 Single endplate deformity, posterior wall involvement","selected"],["4","OF 4 \u2014 Both endplates deformity"],["5","OF 5 \u2014 Anterior or posterior ligament injury"]],
+    opts_gs: [["1","OF 1 \u2014 No deformity"],["2","OF 2 \u2014 Single endplate, intact posterior wall"],["3","OF 3 \u2014 Single endplate, posterior wall involvement","selected"],["4","OF 4 \u2014 Both endplates deformity"],["5","OF 5 \u2014 Anterior or posterior ligament injury"]],
     opts_mech: [["0","Low-energy trauma"],["1","No trauma (spontaneous)"]],
+
     factor_labels: [
         "Age","Vertebral Cementation","No Trauma",
         "Health Status","Deformity Progr.","BMI",
         "Frailty (mFI)","Fracture Type (OF)","Hounsfield Units"
-    ]
+    ],
+
+    info: {
+        age: {
+            title: "Age",
+            body: "Patient's chronological age in completed years.<br><br><strong>Cohort range:</strong> 50\u201396 years.<br><strong>Source:</strong> demographic data at admission."
+        },
+        imc: {
+            title: "Body Mass Index (BMI)",
+            body: "<strong>Formula:</strong> weight (kg) / height\u00b2 (m\u00b2).<br><br><strong>Compute beforehand</strong> using patient's weight and height. Common range: 15\u201345 kg/m\u00b2.<br><br>Example: 70 kg / (1.65 m)\u00b2 = 25.7 kg/m\u00b2."
+        },
+        mfi: {
+            title: "Modified Fragility Index (mFI)",
+            body: "Sum of the number of these conditions:<br><br>\u2022 Hypertension<br>\u2022 Diabetes Mellitus<br>\u2022 COPD<br>\u2022 Congestive heart failure<br>\u2022 Functional dependence for ADLs<br><br><strong>0 \u2014 Not frail:</strong> &lt;2 conditions<br><strong>1 \u2014 Pre-frail:</strong> 2\u20133 conditions<br><strong>2 \u2014 Frail:</strong> \u22654 conditions"
+        },
+        hs: {
+            title: "Health Status (functional status)",
+            body: "Clinical assessment of overall functional status:<br><br><strong>0 \u2014 Baseline:</strong> autonomous, ADLs preserved.<br><strong>-1 \u2014 Deteriorated:</strong> needs partial help, mild-moderate impairment.<br><strong>-2 \u2014 Severely deteriorated:</strong> significant dependence, severe impairment."
+        },
+        gs: {
+            title: "OF Classification (Schnake et al., 2018)",
+            body: "Morphological classification of osteoporotic fractures, assessed on sagittal CT:<br><br><strong>OF 1:</strong> No vertebral deformity.<br><strong>OF 2:</strong> Single endplate deformity, intact posterior wall.<br><strong>OF 3:</strong> Single endplate deformity with posterior wall involvement.<br><strong>OF 4:</strong> Both endplates deformity (vertebra plana or split).<br><strong>OF 5:</strong> Anterior or posterior ligamentous injury."
+        },
+        uh: {
+            title: "Hounsfield Units (HU)",
+            body: "Measure of bone density on CT.<br><br><strong>How to measure:</strong><br>\u2022 Circular ROI in L1 vertebral body<br>\u2022 Central axial slice<br>\u2022 Avoid cortices and sclerotic areas<br>\u2022 ROI size: ~150\u2013200 mm\u00b2<br><br><strong>Interpretation:</strong><br>\u2022 HU &lt; 110: suggests osteoporosis<br>\u2022 Higher value = better bone quality"
+        },
+        mech: {
+            title: "Injury mechanism",
+            body: "<strong>Low-energy trauma:</strong> fall from standing height, identifiable minor exertion.<br><br><strong>No trauma (spontaneous):</strong> pain onset without identifiable event, insufficiency fracture.<br><br>Clinically relevant variable: spontaneous fractures usually associated with worse prognosis."
+        },
+        defprog: {
+            title: "Deformity progression",
+            body: "Unfavorable radiological evolution during follow-up.<br><br><strong>Criteria:</strong><br>\u2022 Local kyphosis increase &gt; 5\u00b0<br>\u2022 Additional vertebral height loss<br>\u2022 Comparison between baseline and follow-up imaging (\u22483 months)<br><br>Activate if at least one criterion is documented."
+        }
+    },
+
+    benefit_high: "Cementation is associated with a {bp} pp reduction in risk of unfavorable outcome.",
+    rec_high: "\u2192 The model suggests potential benefit from vertebral cementation",
+    benefit_mod: "Moderate {bp} pp risk reduction. Uncertain benefit.",
+    rec_mod: "\u2192 Consider additional clinical factors",
+    benefit_low: "Estimated minimal difference between scenarios ({bp} pp) for this profile.",
+    rec_low: "\u2192 Consider conservative treatment"
 }
 };
 
@@ -361,26 +707,46 @@ function setLang(lang) {
 }
 
 // ===================================================================
+// INFO TOOLTIPS — heurística, reduce sesgo del observador
+// ===================================================================
+function showInfo(key) {
+    const t = I[LANG].info[key];
+    if (!t) return;
+    document.getElementById('tooltip-title').textContent = t.title;
+    document.getElementById('tooltip-body').innerHTML = t.body;
+    document.getElementById('tooltip-overlay').classList.add('show');
+    document.getElementById('tooltip').classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+function closeInfo() {
+    document.getElementById('tooltip-overlay').classList.remove('show');
+    document.getElementById('tooltip').classList.remove('show');
+    document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeInfo();
+});
+
+// ===================================================================
 // MODEL v5.1: Logistic Regression + Platt Scaling
 // Trained on 385 patients, validated on 97 (test) + 74 (external)
 // 9 Features: EDAD, VA, MECANISMO_No_trauma, HEALTH STATUS,
 //   PROGRESION DEFORMIDAD, IMC, mFI, MORFOLOGIA FRACTURA, UH
-// Predicts P(POOR) → Platt calibration → 1-p = P(GOOD)
-// Platt fixes the "dead zone" bug of isotonic (82.6% mapped to 100%)
+// Predicts P(POOR) → Platt calibration → returned as P(POOR)
 // Brier ext: 0.190 (Platt) vs 0.508 (old isotonic)
 // ===================================================================
 const M = {
     intercept: -3.0248102849118874,
     coef: [
-         0.026710554180775385,  // 0: EDAD
-        -1.377519498206103,     // 1: VA (cementacion) — protective
-         0.32407476800164337,   // 2: MECANISMO_No_trauma
-        -0.5003052447119511,    // 3: HEALTH STATUS
-         0.5730808048389444,    // 4: PROGRESION DEFORMIDAD
-         0.033001695488010505,  // 5: IMC
-        -0.2127920222932979,    // 6: mFI
-         0.2630920302681411,    // 7: MORFOLOGIA FRACTURA
-        -0.004065699683713781   // 8: UH
+         0.026710554180775385,
+        -1.377519498206103,
+         0.32407476800164337,
+        -0.5003052447119511,
+         0.5730808048389444,
+         0.033001695488010505,
+        -0.2127920222932979,
+         0.2630920302681411,
+        -0.004065699683713781
     ],
     mean: [75.6623,0.1195,0.2494,-0.2597,0.0597,25.9642,0.9273,2.8649,78.0437],
     std:  [9.4805,0.3244,0.4326,0.5148,0.2370,3.6547,0.7661,0.8871,25.9608],
@@ -396,67 +762,114 @@ function predictProba(raw){
     const logit=M.intercept+sc.reduce((s,v,i)=>s+M.coef[i]*v,0);
     // Platt scaling: re-calibrate the logit through a second sigmoid
     const pPoor=sigmoid(M.platt_a*logit+M.platt_b);
-    return 1-pPoor; // probability of GOOD outcome
+    return pPoor; // probability of POOR (unfavorable) outcome
 }
 
 function getContributions(raw){
+    // SHAP-like contribution toward P(POOR):
+    // positive value = pushes toward unfavorable outcome (harmful)
+    // negative value = pushes toward favorable outcome (protective)
     return raw.map((v,i)=>({
         name: I[LANG].factor_labels[i],
-        // Negate because model predicts POOR; positive coef → more POOR → less GOOD
-        c: -(M.coef[i]*((v-M.mean[i])/M.std[i]))
+        c: M.coef[i]*((v-M.mean[i])/M.std[i])
     }));
 }
 
 function getRaw(va){
     return [
-        +document.getElementById('age').value,      // 0: EDAD
-        va,                                          // 1: VA
-        +document.getElementById('mech').value,      // 2: MECANISMO_No_trauma
-        +document.getElementById('hs').value,        // 3: HEALTH STATUS
-        document.getElementById('defprog').checked?1:0, // 4: PROGRESION DEFORMIDAD
-        +document.getElementById('imc').value,       // 5: IMC
-        +document.getElementById('mfi').value,       // 6: mFI
-        +document.getElementById('gs').value,        // 7: MORFOLOGIA FRACTURA
-        +document.getElementById('uh').value         // 8: UH
+        +document.getElementById('age').value,
+        va,
+        +document.getElementById('mech').value,
+        +document.getElementById('hs').value,
+        document.getElementById('defprog').checked?1:0,
+        +document.getElementById('imc').value,
+        +document.getElementById('mfi').value,
+        +document.getElementById('gs').value,
+        +document.getElementById('uh').value
     ];
 }
 
 function uv(id){document.getElementById(id+'-val').textContent=document.getElementById(id).value}
-function setRing(id,p){document.getElementById(id).style.strokeDashoffset=326.73*(1-p)}
+function setRing(id,p,colorClass){
+    const el=document.getElementById(id);
+    el.style.strokeDashoffset=326.73*(1-p);
+    if(colorClass==='green')el.style.stroke='var(--green)';
+    else if(colorClass==='yellow')el.style.stroke='var(--yellow)';
+    else if(colorClass==='red')el.style.stroke='var(--red)';
+}
+
+// TRAFFIC LIGHT THRESHOLDS — p is now P(unfavorable outcome)
+// p ≥ 0.60 → red (high risk)
+// 0.40 ≤ p < 0.60 → yellow (uncertain)
+// p < 0.40 → green (low risk)
+function getRiskClass(p){
+    if(p>=0.60)return 'red';
+    if(p>=0.40)return 'yellow';
+    return 'green';
+}
 
 function predict(){
     const t=I[LANG];
-    const pC=predictProba(getRaw(0));
-    const pS=predictProba(getRaw(1));
-    const benefit=pS-pC;
-    const bp=(benefit*100).toFixed(1);
+    const pC=predictProba(getRaw(0));   // P(unfavorable | conservative)
+    const pS=predictProba(getRaw(1));   // P(unfavorable | cementation)
+    const benefit=pC-pS;                 // positive = cementation reduces risk
+    const bp=(Math.abs(benefit)*100).toFixed(1);
 
     document.getElementById('results').style.display='block';
-    document.getElementById('prob-c').textContent=(pC*100).toFixed(1)+'%';
-    document.getElementById('prob-s').textContent=(pS*100).toFixed(1)+'%';
-    setTimeout(()=>{setRing('ring-c',pC);setRing('ring-s',pS)},100);
 
-    const bc=document.getElementById('bc');
-    document.getElementById('bv').textContent=(benefit>=0?'+':'')+bp+' pp';
+    // ============== MAIN RESULT (semáforo) ==============
+    const riskClass=getRiskClass(pS);
+    const mainPct=(pS*100).toFixed(1);
 
+    const mainResult=document.getElementById('main-result');
+    mainResult.className='main-result '+riskClass;
+
+    const mainProbValue=document.getElementById('main-prob-value');
+    mainProbValue.textContent=mainPct+'%';
+    mainProbValue.className='main-prob-value '+riskClass;
+
+    const riskBadge=document.getElementById('risk-badge');
+    riskBadge.className='risk-badge '+riskClass;
+    const badgeText=riskClass==='green'?t.risk_badge_low:(riskClass==='yellow'?t.risk_badge_mod:t.risk_badge_high);
+    document.getElementById('risk-badge-text').textContent=badgeText;
+
+    // CONTEXT TEXT — interpretation
+    let context='';
     if(benefit>0.10){
-        bc.className='benefit-card positive';
-        document.getElementById('bt').textContent=t.benefit_high.replace('{bp}',bp);
-        document.getElementById('br').textContent=t.rec_high;
-        document.getElementById('br').style.color='#0F4A32';
+        context=t.benefit_high.replace('{bp}',bp)+' '+t.rec_high;
     } else if(benefit>0.03){
-        bc.className='benefit-card neutral';
-        document.getElementById('bt').textContent=t.benefit_mod.replace('{bp}',bp);
-        document.getElementById('br').textContent=t.rec_mod;
-        document.getElementById('br').style.color='#1E40AF';
+        context=t.benefit_mod.replace('{bp}',bp)+' '+t.rec_mod;
     } else {
-        bc.className='benefit-card negative';
-        document.getElementById('bt').textContent=t.benefit_low.replace('{bp}',bp);
-        document.getElementById('br').textContent=t.rec_low;
-        document.getElementById('br').style.color='#991B1B';
+        context=t.benefit_low.replace('{bp}',bp)+' '+t.rec_low;
     }
+    document.getElementById('main-prob-context').textContent=context;
 
-    // Factor contributions (surgical scenario)
+    // RISK SPECTRUM marker — pS is now P(unfavorable);
+    // gradient runs green (0%) → red (100%), so marker position = pS*100
+    const markerPos=Math.min(96,Math.max(4,pS*100));
+    setTimeout(()=>{
+        document.getElementById('risk-marker').style.left=markerPos+'%';
+    },50);
+
+    // ============== COMPARISON RINGS ==============
+    document.getElementById('prob-c').textContent=(pC*100).toFixed(1)+'%';
+    document.getElementById('prob-s').textContent=mainPct+'%';
+
+    const rcClass=getRiskClass(pC);
+    const rsClass=getRiskClass(pS);
+
+    // color the prob-value text in comparison too
+    document.getElementById('prob-c').style.color =
+        rcClass==='green'?'var(--green-dark)':rcClass==='yellow'?'var(--yellow-dark)':'var(--red-dark)';
+    document.getElementById('prob-s').style.color =
+        rsClass==='green'?'var(--green-dark)':rsClass==='yellow'?'var(--yellow-dark)':'var(--red-dark)';
+
+    setTimeout(()=>{
+        setRing('ring-c',pC,rcClass);
+        setRing('ring-s',pS,rsClass);
+    },100);
+
+    // ============== FACTOR CONTRIBUTIONS ==============
     const cs=getContributions(getRaw(1));
     cs.sort((a,b)=>Math.abs(b.c)-Math.abs(a.c));
     const mx=Math.max(...cs.map(c=>Math.abs(c.c)));
