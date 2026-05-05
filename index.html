@@ -135,61 +135,36 @@
         .results{margin-top:1.8rem;animation:fadeUp .5s ease}
         @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 
-        /* MAIN RESULT — semáforo gigante */
-        .main-result{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.8rem 1.5rem 1.6rem;box-shadow:var(--shadow-md);margin-bottom:1.2rem;position:relative;overflow:hidden}
-        .main-result::before{content:'';position:absolute;left:0;top:0;bottom:0;width:6px}
-        .main-result.green::before{background:var(--green)}
-        .main-result.yellow::before{background:var(--yellow)}
-        .main-result.red::before{background:var(--red)}
-
-        .main-result-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.4rem;flex-wrap:wrap;gap:.6rem}
-        .main-result-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted)}
-        .risk-badge{display:inline-flex;align-items:center;gap:.4rem;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.35rem .8rem;border-radius:100px}
-        .risk-badge.green{background:var(--green-light);color:var(--green-dark)}
-        .risk-badge.yellow{background:var(--yellow-light);color:var(--yellow-dark)}
-        .risk-badge.red{background:var(--red-light);color:var(--red-dark)}
-        .risk-badge::before{content:'';width:8px;height:8px;border-radius:50%}
-        .risk-badge.green::before{background:var(--green);box-shadow:0 0 6px var(--green)}
-        .risk-badge.yellow::before{background:var(--yellow);box-shadow:0 0 6px var(--yellow)}
-        .risk-badge.red::before{background:var(--red);box-shadow:0 0 6px var(--red)}
-
-        .main-prob-display{text-align:center;margin-bottom:1.4rem}
-        .main-prob-value{font-size:clamp(3.5rem,11vw,5.5rem);font-weight:800;line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
-        .main-prob-value.green{color:var(--green-dark)}
-        .main-prob-value.yellow{color:var(--yellow-dark)}
-        .main-prob-value.red{color:var(--red-dark)}
-        .main-prob-sublabel{font-size:.95rem;color:var(--text-muted);margin-top:.3rem;font-weight:500}
-        .main-prob-context{font-size:.78rem;color:var(--text-muted);margin-top:.15rem;font-weight:400}
-
-        /* RISK SPECTRUM BAR */
-        .risk-spectrum{margin-top:1.2rem}
-        .risk-spectrum-label{font-size:.7rem;font-weight:600;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center}
-        .risk-bar-wrap{position:relative;padding-top:8px}
-        .risk-bar{height:14px;border-radius:100px;background:linear-gradient(90deg,var(--green) 0%,#84CC16 25%,var(--yellow) 50%,#F97316 75%,var(--red) 100%);position:relative;box-shadow:inset 0 1px 3px rgba(0,0,0,.08)}
-        .risk-marker{position:absolute;top:0;width:6px;height:30px;background:var(--text);border:2px solid #fff;border-radius:3px;box-shadow:0 0 0 1px rgba(15,23,42,.3),0 2px 6px rgba(0,0,0,.2);transition:left .8s cubic-bezier(.4,0,.2,1);transform:translateX(-50%)}
-        .risk-marker::after{content:'';position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid var(--text)}
-        .risk-spectrum-labels{display:flex;justify-content:space-between;font-size:.7rem;color:var(--text-muted);margin-top:.6rem;font-weight:500}
-        .risk-spectrum-labels span{flex:1;text-align:center}
-        .risk-spectrum-labels span:first-child{text-align:left;color:var(--green-dark)}
-        .risk-spectrum-labels span:last-child{text-align:right;color:var(--red-dark)}
-
-        /* COMPARISON SECTION */
-        .comparison-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.4rem;box-shadow:var(--shadow-sm);margin-bottom:1.2rem}
-        .comparison-title{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--primary-dark);margin-bottom:1.1rem;padding-bottom:.55rem;border-bottom:2px solid var(--primary-lighter)}
-        .comparison-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
-        @media(max-width:540px){.comparison-grid{grid-template-columns:1fr}}
-        .comparison-panel{padding:1rem;border-radius:var(--radius);background:var(--surface-alt);border:1px solid var(--border);text-align:center;transition:all .25s}
-        .comparison-panel.highlight{background:var(--primary-lighter);border-color:var(--primary-light)}
-        .comparison-panel-label{font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.7rem}
-        .comparison-panel.highlight .comparison-panel-label{color:var(--primary-dark)}
-        .prob-ring{position:relative;width:110px;height:110px;margin:0 auto .5rem}
+        /* COMPARISON SECTION — ahora es el bloque principal del resultado */
+        .comparison-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.6rem;box-shadow:var(--shadow-sm);margin-bottom:1.2rem}
+        .comparison-title{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--primary-dark);margin-bottom:1.3rem;padding-bottom:.55rem;border-bottom:2px solid var(--primary-lighter)}
+        .comparison-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem}
+        @media(max-width:540px){.comparison-grid{grid-template-columns:1fr;gap:1rem}}
+        /* Ambos paneles con el mismo peso visual — el modelo predice, no recomienda */
+        .comparison-panel{padding:1.4rem 1rem 1.2rem;border-radius:var(--radius);background:var(--surface-alt);border:2px solid var(--border);text-align:center;transition:border-color .3s,background .3s;position:relative}
+        .comparison-panel.green{border-color:var(--green);background:var(--green-light)}
+        .comparison-panel.yellow{border-color:var(--yellow);background:var(--yellow-light)}
+        .comparison-panel.red{border-color:var(--red);background:var(--red-light)}
+        .comparison-panel-label{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.9rem}
+        .prob-ring{position:relative;width:140px;height:140px;margin:0 auto .8rem}
+        @media(max-width:540px){.prob-ring{width:120px;height:120px}}
         .prob-ring svg{transform:rotate(-90deg)}
-        .prob-ring-bg{fill:none;stroke:var(--surface-alt);stroke-width:8}
-        .comparison-panel.highlight .prob-ring-bg{stroke:rgba(37,99,235,.12)}
-        .prob-ring-fill{fill:none;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 1s ease,stroke .3s ease}
+        .prob-ring-bg{fill:none;stroke:rgba(15,23,42,.06);stroke-width:9}
+        .prob-ring-fill{fill:none;stroke-width:9;stroke-linecap:round;transition:stroke-dashoffset 1s ease,stroke .3s ease}
         .prob-ring-text{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
-        .prob-value{font-size:1.7rem;font-weight:700;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-        .prob-label{font-size:.66rem;color:var(--text-muted);margin-top:.15rem;font-weight:500}
+        .prob-value{font-size:2.2rem;font-weight:800;line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+        @media(max-width:540px){.prob-value{font-size:1.9rem}}
+        .prob-label{font-size:.68rem;color:var(--text-muted);margin-top:.2rem;font-weight:500;text-transform:uppercase;letter-spacing:.04em}
+        .panel-risk-badge{display:inline-flex;align-items:center;gap:.35rem;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.3rem .7rem;border-radius:100px;margin-top:.3rem}
+        .panel-risk-badge.green{background:var(--green);color:#fff}
+        .panel-risk-badge.yellow{background:var(--yellow);color:#fff}
+        .panel-risk-badge.red{background:var(--red);color:#fff}
+        .panel-risk-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:#fff;opacity:.85}
+
+        /* Diferencial entre escenarios — descriptivo, secundario, sin recomendación */
+        .scenario-differential{margin-top:1.3rem;padding:.85rem 1rem;background:var(--surface-alt);border-radius:var(--radius);border-left:3px solid var(--primary-light);font-size:.78rem;color:var(--text);line-height:1.5}
+        .scenario-differential .diff-label{color:var(--text-muted);font-weight:500}
+        .scenario-differential .diff-value{font-weight:700;color:var(--text);font-variant-numeric:tabular-nums}
 
         /* FACTORS */
         .factors-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.4rem;box-shadow:var(--shadow-sm);margin-bottom:1.2rem}
@@ -352,38 +327,7 @@
     <!-- RESULTS -->
     <div id="results" class="results" style="display:none">
 
-        <!-- MAIN RESULT — semáforo gigante con barra espectro -->
-        <div class="main-result" id="main-result">
-            <div class="main-result-header">
-                <div class="main-result-label" data-i18n="main_result_label"></div>
-                <div class="risk-badge" id="risk-badge">
-                    <span id="risk-badge-text"></span>
-                </div>
-            </div>
-
-            <div class="main-prob-display">
-                <div class="main-prob-value" id="main-prob-value">&mdash;</div>
-                <div class="main-prob-sublabel" data-i18n="main_prob_sublabel"></div>
-                <div class="main-prob-context" id="main-prob-context"></div>
-            </div>
-
-            <div class="risk-spectrum">
-                <div class="risk-spectrum-label">
-                    <span data-i18n="risk_spectrum_label"></span>
-                </div>
-                <div class="risk-bar-wrap">
-                    <div class="risk-bar"></div>
-                    <div class="risk-marker" id="risk-marker" style="left:50%"></div>
-                </div>
-                <div class="risk-spectrum-labels">
-                    <span data-i18n="risk_low"></span>
-                    <span data-i18n="risk_moderate"></span>
-                    <span data-i18n="risk_high"></span>
-                </div>
-            </div>
-        </div>
-
-        <!-- COMPARISON -->
+        <!-- COMPARISON SECTION — bloque principal, simétrico, descriptivo -->
         <div class="comparison-section">
             <div class="comparison-title" data-i18n="comparison_title"></div>
             <div class="comparison-grid">
@@ -399,20 +343,26 @@
                             <span class="prob-label" data-i18n="res_unfavorable"></span>
                         </div>
                     </div>
+                    <div class="panel-risk-badge" id="badge-c"></div>
                 </div>
-                <div class="comparison-panel highlight" id="panel-s">
+                <div class="comparison-panel" id="panel-s">
                     <div class="comparison-panel-label" data-i18n="res_with_cement"></div>
                     <div class="prob-ring">
                         <svg viewBox="0 0 120 120">
                             <circle class="prob-ring-bg" cx="60" cy="60" r="52"/>
-                            <circle id="ring-s" class="prob-ring-fill" cx="60" cy="60" r="52" stroke="#2563EB" stroke-dasharray="326.73" stroke-dashoffset="326.73"/>
+                            <circle id="ring-s" class="prob-ring-fill" cx="60" cy="60" r="52" stroke="#94A3B8" stroke-dasharray="326.73" stroke-dashoffset="326.73"/>
                         </svg>
                         <div class="prob-ring-text">
                             <span class="prob-value" id="prob-s">&mdash;</span>
                             <span class="prob-label" data-i18n="res_unfavorable"></span>
                         </div>
                     </div>
+                    <div class="panel-risk-badge" id="badge-s"></div>
                 </div>
+            </div>
+            <div class="scenario-differential">
+                <span class="diff-label" data-i18n="diff_label"></span>
+                <span class="diff-value" id="diff-value">&mdash;</span>
             </div>
         </div>
 
@@ -432,7 +382,7 @@
             <div class="mc-text" data-i18n-html="mc_text"></div>
             <div class="mc-bar-wrap">
                 <div class="mc-bar">
-                    <div class="mc-marker" style="left:41.2%"></div>
+                    <div class="mc-marker" style="left:48.8%"></div>
                 </div>
                 <div class="mc-scale">
                     <span data-i18n="mc_random"></span>
@@ -446,7 +396,7 @@
 
     <div class="footer">
         <div>Mart&iacute;nez-N&uacute;&ntilde;ez P, Guti&eacute;rrez-Gonz&aacute;lez R. <span data-i18n="footer_desc"></span><br>TFM &mdash; Universidad Europea &mdash; 2025/2026</div>
-        <div class="footer-model">Logistic Regression &middot; Platt Calibration &middot; AUC 0.706 &middot; n=482 &middot; 9 features &middot; v6.1</div>
+        <div class="footer-model">Logistic Regression &middot; Platt Calibration &middot; AUC 0.744 (val. ext., n=74) &middot; n=482 &middot; 9 features &middot; v5.1</div>
     </div>
 </div>
 
@@ -466,12 +416,12 @@
 // ===================================================================
 const I = {
 es: {
-    header_badge: "Herramienta de Investigaci\u00f3n \u2014 v6.1",
+    header_badge: "Herramienta de Investigaci\u00f3n \u2014 v5.1",
     header_title: "Predictor de Resultado en Fracturas<br>Osteopor\u00f3ticas Toracolumbares",
-    header_subtitle: "Modelo de apoyo a la decisi\u00f3n cl\u00ednica basado en regresi\u00f3n log\u00edstica con calibraci\u00f3n Platt y 9 variables predictoras",
+    header_subtitle: "Modelo de regresi\u00f3n log\u00edstica con calibraci\u00f3n Platt y 9 variables predictoras. Estima la probabilidad de resultado cl\u00ednico desfavorable; no recomienda tratamiento.",
     patients: "pacientes", variables: "variables",
     isotonic_word: "Platt", calibration: "calibraci\u00f3n",
-    disclaimer: "<strong>Solo para uso en investigaci\u00f3n.</strong> Prototipo acad\u00e9mico. No sustituye el juicio cl\u00ednico. Modelo observacional retrospectivo con calibraci\u00f3n Platt.",
+    disclaimer: "<strong>Solo para uso en investigaci\u00f3n.</strong> Prototipo acad\u00e9mico. <strong>Esta herramienta predice resultados; no recomienda tratamientos.</strong> No sustituye el juicio cl\u00ednico. Modelo observacional retrospectivo con calibraci\u00f3n Platt.",
     card_patient: "&#128100; Paciente",
     card_fracture: "&#129460; Fractura",
     card_treatment: "&#128295; Tratamiento",
@@ -486,27 +436,25 @@ es: {
     hint_treatment: "El modelo compara autom\u00e1ticamente ambos escenarios (conservador vs cementaci\u00f3n vertebral).",
     btn_predict: "Calcular Predicci\u00f3n Comparativa",
 
-    main_result_label: "Riesgo estimado con cementaci\u00f3n",
-    main_prob_sublabel: "de resultado cl\u00ednico desfavorable",
-    main_prob_context: "",
-    risk_spectrum_label: "Posici\u00f3n del paciente en el espectro de riesgo",
-    risk_high: "Riesgo alto",
-    risk_moderate: "Incierto",
-    risk_low: "Riesgo bajo",
     risk_badge_high: "Riesgo Alto",
     risk_badge_mod: "Riesgo Moderado",
     risk_badge_low: "Riesgo Bajo",
 
-    comparison_title: "Comparaci\u00f3n de escenarios cl\u00ednicos",
+    comparison_title: "Probabilidad estimada de resultado desfavorable",
     res_no_cement: "Sin cementaci\u00f3n",
     res_with_cement: "Con cementaci\u00f3n vertebral",
     res_unfavorable: "Desfavorable",
 
+    diff_label: "Diferencia estimada entre escenarios:",
+    diff_high: "{bp} puntos porcentuales menos de riesgo predicho con cementaci\u00f3n.",
+    diff_mod: "{bp} puntos porcentuales menos de riesgo predicho con cementaci\u00f3n.",
+    diff_low: "{bp} puntos porcentuales de diferencia entre escenarios.",
+
     res_factors_title: "&#128202; Contribuci\u00f3n de cada variable",
-    res_factors_subtitle: "Cu\u00e1nto aumenta (rojo) o reduce (verde) cada variable el riesgo de resultado desfavorable, en el escenario con cementaci\u00f3n.",
+    res_factors_subtitle: "C\u00f3mo influye cada variable del perfil del paciente sobre el riesgo predicho (escenario conservador, sin cementaci\u00f3n).",
 
     mc_title: "Fiabilidad del modelo \u2014 a tener en cuenta",
-    mc_text: "El modelo presenta un AUC de <strong>0.706</strong>, lo que indica una capacidad predictiva <strong>moderada</strong>. Es \u00fatil como apoyo para confirmar sospechas cl\u00ednicas, pero <strong>no debe emplearse de forma aut\u00f3noma</strong> para decisiones quir\u00fargicas. Los resultados deben siempre integrarse con el juicio cl\u00ednico, exploraci\u00f3n f\u00edsica y otros datos del paciente.",
+    mc_text: "El modelo presenta un AUC de <strong>0.744</strong> en validaci\u00f3n externa (n=74), lo que indica una capacidad predictiva <strong>moderada</strong>. Es \u00fatil como apoyo para confirmar sospechas cl\u00ednicas, pero <strong>no debe emplearse de forma aut\u00f3noma</strong> para decisiones quir\u00fargicas. Los resultados deben siempre integrarse con el juicio cl\u00ednico, exploraci\u00f3n f\u00edsica y otros datos del paciente.",
     mc_random: "Aleatorio",
     mc_moderate: "Moderado",
     mc_good: "Bueno",
@@ -560,20 +508,20 @@ es: {
         }
     },
 
-    benefit_high: "La cementaci\u00f3n se asocia a una reducci\u00f3n de {bp} pp en el riesgo de resultado desfavorable.",
-    rec_high: "\u2192 El modelo sugiere beneficio potencial de la cementaci\u00f3n vertebral",
-    benefit_mod: "Reducci\u00f3n moderada del riesgo de {bp} pp. Beneficio incierto.",
-    rec_mod: "\u2192 Considerar factores cl\u00ednicos adicionales",
-    benefit_low: "Diferencia estimada m\u00ednima entre escenarios ({bp} pp) para este perfil.",
-    rec_low: "\u2192 Valorar tratamiento conservador"
+    benefit_high: "",
+    rec_high: "",
+    benefit_mod: "",
+    rec_mod: "",
+    benefit_low: "",
+    rec_low: ""
 },
 en: {
-    header_badge: "Research Tool \u2014 v6.1",
+    header_badge: "Research Tool \u2014 v5.1",
     header_title: "Outcome Predictor for Thoracolumbar<br>Osteoporotic Fractures",
-    header_subtitle: "Clinical decision support model based on logistic regression with Platt calibration and 9 predictor variables",
+    header_subtitle: "Logistic regression model with Platt calibration and 9 predictor variables. Estimates probability of unfavorable clinical outcome; does not recommend treatment.",
     patients: "patients", variables: "variables",
     isotonic_word: "Platt", calibration: "calibration",
-    disclaimer: "<strong>For research use only.</strong> Academic prototype. Does not replace clinical judgment. Retrospective observational model with Platt calibration.",
+    disclaimer: "<strong>For research use only.</strong> Academic prototype. <strong>This tool predicts outcomes; it does not recommend treatments.</strong> Does not replace clinical judgment. Retrospective observational model with Platt calibration.",
     card_patient: "&#128100; Patient",
     card_fracture: "&#129460; Fracture",
     card_treatment: "&#128295; Treatment",
@@ -588,27 +536,25 @@ en: {
     hint_treatment: "The model automatically compares both scenarios (conservative vs vertebral cementation).",
     btn_predict: "Calculate Comparative Prediction",
 
-    main_result_label: "Estimated risk with cementation",
-    main_prob_sublabel: "of unfavorable clinical outcome",
-    main_prob_context: "",
-    risk_spectrum_label: "Patient position in the risk spectrum",
-    risk_high: "High risk",
-    risk_moderate: "Uncertain",
-    risk_low: "Low risk",
     risk_badge_high: "High Risk",
     risk_badge_mod: "Moderate Risk",
     risk_badge_low: "Low Risk",
 
-    comparison_title: "Comparison of clinical scenarios",
+    comparison_title: "Estimated probability of unfavorable outcome",
     res_no_cement: "Without cementation",
     res_with_cement: "With vertebral cementation",
     res_unfavorable: "Unfavorable",
 
+    diff_label: "Estimated difference between scenarios:",
+    diff_high: "{bp} percentage points lower predicted risk with cementation.",
+    diff_mod: "{bp} percentage points lower predicted risk with cementation.",
+    diff_low: "{bp} percentage points difference between scenarios.",
+
     res_factors_title: "&#128202; Variable contribution",
-    res_factors_subtitle: "How much each variable raises (red) or lowers (green) the risk of an unfavorable outcome, in the surgical scenario.",
+    res_factors_subtitle: "How each variable in the patient profile influences the predicted risk (conservative scenario, without cementation).",
 
     mc_title: "Model reliability \u2014 important note",
-    mc_text: "The model achieves an AUC of <strong>0.706</strong>, indicating <strong>moderate</strong> predictive performance. It is useful as a tool to support clinical suspicion but <strong>should not be used autonomously</strong> for surgical decisions. Outputs must always be integrated with clinical judgment, physical examination and other patient data.",
+    mc_text: "The model achieves an AUC of <strong>0.744</strong> on external validation (n=74), indicating <strong>moderate</strong> predictive performance. It is useful as a tool to support clinical suspicion but <strong>should not be used autonomously</strong> for surgical decisions. Outputs must always be integrated with clinical judgment, physical examination and other patient data.",
     mc_random: "Random",
     mc_moderate: "Moderate",
     mc_good: "Good",
@@ -662,12 +608,12 @@ en: {
         }
     },
 
-    benefit_high: "Cementation is associated with a {bp} pp reduction in risk of unfavorable outcome.",
-    rec_high: "\u2192 The model suggests potential benefit from vertebral cementation",
-    benefit_mod: "Moderate {bp} pp risk reduction. Uncertain benefit.",
-    rec_mod: "\u2192 Consider additional clinical factors",
-    benefit_low: "Estimated minimal difference between scenarios ({bp} pp) for this profile.",
-    rec_low: "\u2192 Consider conservative treatment"
+    benefit_high: "",
+    rec_high: "",
+    benefit_mod: "",
+    rec_mod: "",
+    benefit_low: "",
+    rec_low: ""
 }
 };
 
@@ -733,7 +679,9 @@ document.addEventListener('keydown', e => {
 // 9 Features: EDAD, VA, MECANISMO_No_trauma, HEALTH STATUS,
 //   PROGRESION DEFORMIDAD, IMC, mFI, MORFOLOGIA FRACTURA, UH
 // Predicts P(POOR) → Platt calibration → returned as P(POOR)
-// Brier ext: 0.190 (Platt) vs 0.508 (old isotonic)
+// AUC: 0.667 (CV interna, n=482) · 0.744 (val. ext., n=74)
+// Brier: 0.227 (CV interna) → 0.211 (val. ext.)
+// ECE: 0.162 (LR sin calibrar) → 0.096 (LR + Platt, CV 5-fold)
 // ===================================================================
 const M = {
     intercept: -3.0248102849118874,
@@ -812,65 +760,51 @@ function predict(){
     const t=I[LANG];
     const pC=predictProba(getRaw(0));   // P(unfavorable | conservative)
     const pS=predictProba(getRaw(1));   // P(unfavorable | cementation)
-    const benefit=pC-pS;                 // positive = cementation reduces risk
+    const benefit=pC-pS;                 // positive = cementation lowers predicted risk
     const bp=(Math.abs(benefit)*100).toFixed(1);
 
     document.getElementById('results').style.display='block';
 
-    // ============== MAIN RESULT (semáforo) ==============
-    const riskClass=getRiskClass(pS);
-    const mainPct=(pS*100).toFixed(1);
-
-    const mainResult=document.getElementById('main-result');
-    mainResult.className='main-result '+riskClass;
-
-    const mainProbValue=document.getElementById('main-prob-value');
-    mainProbValue.textContent=mainPct+'%';
-    mainProbValue.className='main-prob-value '+riskClass;
-
-    const riskBadge=document.getElementById('risk-badge');
-    riskBadge.className='risk-badge '+riskClass;
-    const badgeText=riskClass==='green'?t.risk_badge_low:(riskClass==='yellow'?t.risk_badge_mod:t.risk_badge_high);
-    document.getElementById('risk-badge-text').textContent=badgeText;
-
-    // CONTEXT TEXT — interpretation
-    let context='';
-    if(benefit>0.10){
-        context=t.benefit_high.replace('{bp}',bp)+' '+t.rec_high;
-    } else if(benefit>0.03){
-        context=t.benefit_mod.replace('{bp}',bp)+' '+t.rec_mod;
-    } else {
-        context=t.benefit_low.replace('{bp}',bp)+' '+t.rec_low;
-    }
-    document.getElementById('main-prob-context').textContent=context;
-
-    // RISK SPECTRUM marker — pS is now P(unfavorable);
-    // gradient runs green (0%) → red (100%), so marker position = pS*100
-    const markerPos=Math.min(96,Math.max(4,pS*100));
-    setTimeout(()=>{
-        document.getElementById('risk-marker').style.left=markerPos+'%';
-    },50);
-
-    // ============== COMPARISON RINGS ==============
-    document.getElementById('prob-c').textContent=(pC*100).toFixed(1)+'%';
-    document.getElementById('prob-s').textContent=mainPct+'%';
-
+    // ============== SYMMETRIC COMPARISON PANELS ==============
+    // Both panels are equal weight: tool predicts, doesn't recommend.
     const rcClass=getRiskClass(pC);
     const rsClass=getRiskClass(pS);
 
-    // color the prob-value text in comparison too
-    document.getElementById('prob-c').style.color =
+    // Panel CONSERVATIVE
+    document.getElementById('prob-c').textContent=(pC*100).toFixed(1)+'%';
+    document.getElementById('prob-c').style.color=
         rcClass==='green'?'var(--green-dark)':rcClass==='yellow'?'var(--yellow-dark)':'var(--red-dark)';
-    document.getElementById('prob-s').style.color =
+    document.getElementById('panel-c').className='comparison-panel '+rcClass;
+    const badgeC=document.getElementById('badge-c');
+    badgeC.className='panel-risk-badge '+rcClass;
+    badgeC.textContent=rcClass==='green'?t.risk_badge_low:(rcClass==='yellow'?t.risk_badge_mod:t.risk_badge_high);
+
+    // Panel SURGICAL
+    document.getElementById('prob-s').textContent=(pS*100).toFixed(1)+'%';
+    document.getElementById('prob-s').style.color=
         rsClass==='green'?'var(--green-dark)':rsClass==='yellow'?'var(--yellow-dark)':'var(--red-dark)';
+    document.getElementById('panel-s').className='comparison-panel '+rsClass;
+    const badgeS=document.getElementById('badge-s');
+    badgeS.className='panel-risk-badge '+rsClass;
+    badgeS.textContent=rsClass==='green'?t.risk_badge_low:(rsClass==='yellow'?t.risk_badge_mod:t.risk_badge_high);
 
     setTimeout(()=>{
         setRing('ring-c',pC,rcClass);
         setRing('ring-s',pS,rsClass);
     },100);
 
+    // ============== DIFFERENTIAL (descriptive, no recommendation) ==============
+    let diffText;
+    if(benefit>0.10){diffText=t.diff_high;}
+    else if(benefit>0.03){diffText=t.diff_mod;}
+    else {diffText=t.diff_low;}
+    document.getElementById('diff-value').textContent=diffText.replace('{bp}',bp);
+
     // ============== FACTOR CONTRIBUTIONS ==============
-    const cs=getContributions(getRaw(1));
+    // Computed on the CONSERVATIVE scenario (VA=0) so the bars represent
+    // the patient's intrinsic risk profile. The effect of VA is fully
+    // captured in the comparison panel above.
+    const cs=getContributions(getRaw(0));
     cs.sort((a,b)=>Math.abs(b.c)-Math.abs(a.c));
     const mx=Math.max(...cs.map(c=>Math.abs(c.c)));
     const fc=document.getElementById('fc');
