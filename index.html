@@ -215,7 +215,7 @@
     <p data-i18n="header_subtitle"></p>
     <div class="header-stats">
         <div class="header-stat"><strong>482</strong> <span data-i18n="patients"></span></div>
-        <div class="header-stat"><strong>0.706</strong> AUC-ROC</div>
+        <div class="header-stat"><strong>0.744</strong> AUC-ROC</div>
         <div class="header-stat"><strong>9</strong> <span data-i18n="variables"></span></div>
         <div class="header-stat"><strong data-i18n="isotonic_word"></strong> <span data-i18n="calibration"></span></div>
     </div>
@@ -674,52 +674,61 @@ document.addEventListener('keydown', e => {
 });
 
 // ===================================================================
-// MODEL v5.1: Logistic Regression + Platt Scaling
+// MODEL v5.1: CalibratedClassifierCV (5-fold ensemble)
+//   = LogisticRegression(C=0.1) + sigmoid (Platt) calibration
 // Trained on 385 patients, validated on 97 (test) + 74 (external)
 // 9 Features: EDAD, VA, MECANISMO_No_trauma, HEALTH STATUS,
 //   PROGRESION DEFORMIDAD, IMC, mFI, MORFOLOGIA FRACTURA, UH
-// Predicts P(POOR) → Platt calibration → returned as P(POOR)
+// Predicts P(POOR) by averaging the 5 calibrated base classifiers
+// (reproduces exactly the output of the Python TFM model).
 // AUC: 0.667 (CV interna, n=482) · 0.744 (val. ext., n=74)
 // Brier: 0.227 (CV interna) → 0.211 (val. ext.)
 // ECE: 0.162 (LR sin calibrar) → 0.096 (LR + Platt, CV 5-fold)
 // ===================================================================
 const M = {
-    intercept: -3.0248102849118874,
-    coef: [
-         0.026710554180775385,
-        -1.377519498206103,
-         0.32407476800164337,
-        -0.5003052447119511,
-         0.5730808048389444,
-         0.033001695488010505,
-        -0.2127920222932979,
-         0.2630920302681411,
-        -0.004065699683713781
+    // StandardScaler (n=385) — global, compartido por los 5 folds
+    mean: [75.662338, 0.119481, 0.249351, -0.25974, 0.05974, 25.964196, 0.927273, 2.864935, 78.043662],
+    std:  [9.480548, 0.324353, 0.432637, 0.514784, 0.237005, 3.654726, 0.766106, 0.887103, 25.960797],
+
+    // 5 modelos base + 5 calibradores Platt (CalibratedClassifierCV cv=5).
+    // En predictProba se promedian las 5 probabilidades calibradas,
+    // reproduciendo exactamente el output del modelo Python del TFM.
+    // Fórmula: P_calibrada = sigmoid(platt_a * logit + platt_b)
+    folds: [
+        {intercept: 0.227302, coef: [0.16855, -0.474422, 0.186119, -0.372371, 0.126879, 0.131837, -0.152523, 0.169013, -0.130985], platt_a: 0.492278, platt_b: -0.068627},
+        {intercept: 0.170599, coef: [0.309829, -0.45471, 0.107277, -0.228979, 0.124517, 0.056653, -0.174748, 0.223079, -0.050067], platt_a: 0.735636, platt_b: 0.029536},
+        {intercept: 0.162175, coef: [0.149581, -0.351754, 0.161983, -0.121016, 0.245352, 0.093716, 0.060702, 0.180333, -0.177586], platt_a: 0.810371, platt_b: 0.091535},
+        {intercept: 0.170926, coef: [0.289341, -0.441031, 0.107324, -0.249306, 0.155979, 0.064847, -0.194437, 0.233309, -0.137601], platt_a: 0.529031, platt_b: 0.092148},
+        {intercept: 0.146555, coef: [0.169061, -0.421083, 0.116659, -0.169874, 0.073259, 0.174611, -0.109428, 0.212389, 0.002575], platt_a: 1.725474, platt_b: 0.015442}
     ],
-    mean: [75.6623,0.1195,0.2494,-0.2597,0.0597,25.9642,0.9273,2.8649,78.0437],
-    std:  [9.4805,0.3244,0.4326,0.5148,0.2370,3.6547,0.7661,0.8871,25.9608],
-    // Platt scaling parameters: P(POOR)_calibrated = sigmoid(platt_a * logit + platt_b)
-    platt_a: 0.40935903736065543,
-    platt_b: 1.3915476914803802
+
+    // Coeficientes promedio para SHAP (TFM: SHAP independiente sobre cada
+    // modelo base, después promediado → equivale a coef_avg sobre z-scores).
+    intercept_avg: 0.175512,
+    coef_avg: [0.217273, -0.4286, 0.135872, -0.228309, 0.145197, 0.104333, -0.114087, 0.203624, -0.098733]
 };
 
 function sigmoid(x){return 1/(1+Math.exp(-x))}
 
 function predictProba(raw){
-    const sc=raw.map((v,i)=>(v-M.mean[i])/M.std[i]);
-    const logit=M.intercept+sc.reduce((s,v,i)=>s+M.coef[i]*v,0);
-    // Platt scaling: re-calibrate the logit through a second sigmoid
-    const pPoor=sigmoid(M.platt_a*logit+M.platt_b);
-    return pPoor; // probability of POOR (unfavorable) outcome
+    const sc = raw.map((v,i) => (v-M.mean[i])/M.std[i]);
+    // Promediar las 5 probabilidades calibradas (CalibratedClassifierCV cv=5)
+    let sum = 0;
+    for (const f of M.folds) {
+        const logit = f.intercept + sc.reduce((s,v,i)=>s+f.coef[i]*v, 0);
+        sum += sigmoid(f.platt_a*logit + f.platt_b);
+    }
+    return sum / M.folds.length;  // P(POOR) calibrada
 }
 
 function getContributions(raw){
-    // SHAP-like contribution toward P(POOR):
+    // SHAP-like contribution toward P(POOR) en log-odds:
+    // promedio de los 5 modelos base = coef_avg sobre z-scores.
     // positive value = pushes toward unfavorable outcome (harmful)
     // negative value = pushes toward favorable outcome (protective)
     return raw.map((v,i)=>({
         name: I[LANG].factor_labels[i],
-        c: M.coef[i]*((v-M.mean[i])/M.std[i])
+        c: M.coef_avg[i]*((v-M.mean[i])/M.std[i])
     }));
 }
 
