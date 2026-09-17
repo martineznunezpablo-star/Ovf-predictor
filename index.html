@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OVF Predictor v6.1 — Predictor Clínico de Fracturas Osteoporóticas</title>
+    <title>OVF Predictor v1.1 — Predictor Clínico de Fracturas Osteoporóticas</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -179,6 +179,63 @@
         .scenario-differential .diff-label{color:var(--text-muted);font-weight:500}
         .scenario-differential .diff-value{font-weight:700;color:var(--text);font-variant-numeric:tabular-nums}
 
+        /* ============== ESCALA DE UMBRAL ============== */
+        /* Clasificación binaria en un único punto operativo pre-especificado.
+           La escala lineal muestra la distancia de la probabilidad al corte. */
+        .thr-scale{margin:.9rem .2rem 0}
+        .thr-track{position:relative;height:9px;border-radius:100px;background:var(--border);overflow:visible}
+        .thr-fill{position:absolute;left:0;top:0;bottom:0;border-radius:100px;transition:width .8s cubic-bezier(.4,0,.2,1),background .3s}
+        .thr-fill.green{background:var(--green)}
+        .thr-fill.red{background:var(--red)}
+        .thr-tick{position:absolute;top:-5px;width:3px;height:19px;background:var(--text);border-radius:2px;box-shadow:0 0 0 2px var(--surface);transform:translateX(-50%);transition:left .3s}
+        .thr-tick::after{content:attr(data-label);position:absolute;top:21px;left:50%;transform:translateX(-50%);font-size:.6rem;font-weight:700;color:var(--text);white-space:nowrap;letter-spacing:.02em}
+        .thr-ends{display:flex;justify-content:space-between;margin-top:1.15rem;font-size:.6rem;color:var(--text-muted);font-weight:600}
+
+        /* Métricas operativas del umbral activo */
+        .op-metrics{margin-top:1.3rem;padding:.95rem 1.1rem;background:var(--primary-lighter);border:1px solid var(--primary-light);border-radius:var(--radius)}
+        .op-metrics-head{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--primary-darker);margin-bottom:.6rem}
+        .op-metrics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem}
+        @media(max-width:540px){.op-metrics-grid{grid-template-columns:repeat(2,1fr)}}
+        .op-metric{text-align:center}
+        .op-metric strong{display:block;font-size:1.05rem;font-weight:800;color:var(--primary-darker);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+        .op-metric span{font-size:.64rem;color:var(--primary-dark);text-transform:uppercase;letter-spacing:.04em;font-weight:600;opacity:.8}
+        .op-metrics-src{font-size:.68rem;color:var(--primary-dark);margin-top:.65rem;opacity:.85;line-height:1.45}
+
+        /* ============== MODO SCREENING ALTERNATIVO (0.432) ============== */
+        .adv-section{margin-top:1.1rem;border-top:1px dashed var(--border-strong);padding-top:.9rem}
+        .adv-toggle{width:100%;background:none;border:none;font-family:inherit;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:.25rem 0;transition:color .2s}
+        .adv-toggle:hover{color:var(--primary)}
+        .adv-toggle .chev{transition:transform .25s;font-size:.7rem}
+        .adv-toggle.open .chev{transform:rotate(180deg)}
+        .adv-panel{display:none;margin-top:.85rem;padding:.95rem 1.05rem;background:var(--yellow-bg);border:1px solid #FDE68A;border-radius:var(--radius)}
+        .adv-panel.open{display:block;animation:fadeUp .3s ease}
+        .adv-tags{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.7rem}
+        .adv-tag{font-size:.6rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--yellow);color:#fff;padding:.22rem .55rem;border-radius:100px}
+        .adv-warn{font-size:.75rem;color:#854D0E;line-height:1.55;margin-bottom:.8rem}
+        .adv-warn strong{font-weight:700}
+        .adv-switch{display:flex;align-items:center;justify-content:space-between;gap:.7rem;padding-top:.7rem;border-top:1px solid #FDE68A}
+        .adv-switch-label{font-size:.79rem;font-weight:700;color:#854D0E}
+
+        /* ============== AVISOS DE RANGO (UH) ============== */
+        .range-warn{margin-top:.5rem;padding:.6rem .75rem;border-radius:8px;font-size:.73rem;line-height:1.5;display:none;gap:.5rem;align-items:flex-start}
+        .range-warn.show{display:flex}
+        .range-warn .rw-icon{flex-shrink:0;line-height:1.35}
+        .range-warn.plaus{background:var(--red-bg);border:1px solid var(--red-light);color:#7F1D1D}
+        .range-warn.extrap{background:var(--yellow-bg);border:1px solid #FDE68A;color:#854D0E}
+        .range-warn strong{font-weight:700}
+        .num-input{width:5.2rem;padding:.42rem .5rem;border:1px solid var(--border-strong);border-radius:8px;font-family:inherit;font-size:.88rem;font-weight:700;text-align:center;color:var(--primary-dark);background:var(--surface);font-variant-numeric:tabular-nums}
+        .num-input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+        .num-input.out{border-color:var(--red);color:var(--red-dark);background:var(--red-bg)}
+
+        /* Marca out-of-training-range en la página de resultados */
+        .oor-flags{margin-bottom:1.2rem}
+        .oor-flag{padding:.85rem 1.05rem;border-radius:var(--radius);font-size:.79rem;line-height:1.55;display:flex;gap:.6rem;align-items:flex-start;margin-bottom:.6rem}
+        .oor-flag:last-child{margin-bottom:0}
+        .oor-flag.plaus{background:var(--red-bg);border:1px solid var(--red);color:#7F1D1D}
+        .oor-flag.extrap{background:var(--yellow-bg);border:1px solid var(--yellow);color:#854D0E}
+        .oor-flag strong{font-weight:700}
+        .oor-icon{flex-shrink:0;line-height:1.4}
+
         /* FACTORS */
         .factors-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.4rem;box-shadow:var(--shadow-sm);margin-bottom:1.2rem}
         .factors-title{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--primary-dark);margin-bottom:.7rem;padding-bottom:.55rem;border-bottom:2px solid var(--primary-lighter)}
@@ -207,13 +264,63 @@
         .mc-marker{position:absolute;top:-3px;width:4px;height:14px;background:var(--primary-darker);border-radius:2px;box-shadow:0 0 0 2px #fff;transform:translateX(-50%)}
         .mc-scale{display:flex;justify-content:space-between;font-size:.62rem;color:var(--primary-darker);margin-top:.4rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;opacity:.7}
 
+        /* ============== SAFETY GATE (disclaimer bloqueante) ============== */
+        /* Se muestra en cada carga, antes de que pueda verse ningún resultado. */
+        .gate-overlay{position:fixed;inset:0;background:rgba(15,23,42,.72);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(4px);overflow-y:auto}
+        .gate-overlay.hidden{display:none}
+        .gate{background:var(--surface);border-radius:var(--radius-lg);max-width:640px;width:100%;box-shadow:var(--shadow-xl);padding:1.8rem 1.8rem 1.5rem;margin:auto;animation:popIn .3s cubic-bezier(.4,0,.2,1);border-top:5px solid var(--red)}
+        @media(max-width:540px){.gate{padding:1.3rem 1.1rem 1.1rem}}
+        .gate-head{display:flex;align-items:center;gap:.6rem;margin-bottom:.9rem}
+        .gate-icon{font-size:1.5rem;line-height:1}
+        .gate-title{font-size:1.08rem;font-weight:800;color:var(--red-dark);letter-spacing:-.01em;line-height:1.3}
+        .gate-body{font-size:.86rem;line-height:1.62;color:var(--text)}
+        .gate-body p{margin-bottom:.75rem}
+        .gate-body p:last-child{margin-bottom:0}
+        .gate-body strong{font-weight:700;color:var(--red-dark)}
+        .gate-body .gate-em{background:var(--red-bg);border-left:3px solid var(--red);padding:.6rem .8rem;border-radius:6px;display:block}
+        .gate-actions{margin-top:1.3rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+        .gate-btn{flex:1;min-width:220px;padding:.95rem 1.2rem;background:linear-gradient(135deg,var(--primary-dark),var(--primary));color:#fff;border:none;border-radius:var(--radius);font-family:inherit;font-size:.95rem;font-weight:700;cursor:pointer;transition:all .25s;box-shadow:0 4px 14px rgba(37,99,235,.25)}
+        .gate-btn:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(37,99,235,.32)}
+        .gate-lang{display:flex;gap:.3rem;flex-shrink:0}
+        .gate-lang button{padding:.45rem .8rem;font-family:inherit;font-size:.72rem;font-weight:700;letter-spacing:.06em;border:1px solid var(--border-strong);background:var(--surface);color:var(--text-muted);border-radius:8px;cursor:pointer;transition:all .2s}
+        .gate-lang button.active{background:var(--primary-lighter);border-color:var(--primary);color:var(--primary-dark)}
+
+        /* Caveat permanente junto al delta contrafactual */
+        .delta-caveat{margin-top:.6rem;padding:.7rem .85rem;background:var(--red-bg);border:1px solid var(--red-light);border-radius:8px;font-size:.74rem;color:#7F1D1D;line-height:1.5}
+        .delta-caveat strong{font-weight:700}
+
         /* FOOTER */
         .footer{margin-top:2rem;padding:1.4rem;text-align:center;font-size:.74rem;color:var(--text-muted);border-top:1px solid var(--border)}
+        .footer-links{margin-top:.7rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+        .footer-links a{color:var(--primary-dark);font-weight:600;text-decoration:none;font-size:.73rem;display:inline-flex;align-items:center;gap:.35rem}
+        .footer-links a:hover{text-decoration:underline}
         .footer-model{display:inline-flex;align-items:center;gap:.5rem;background:var(--surface);border:1px solid var(--border);padding:.35rem .85rem;border-radius:100px;margin-top:.6rem;font-size:.7rem;font-weight:500}
         .footer-model::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--primary)}
     </style>
 </head>
 <body>
+
+<!-- ============================================================
+     SAFETY GATE — disclaimer bloqueante.
+     Se muestra en CADA carga de la página, antes de que pueda
+     visualizarse ningún resultado. Sin persistencia deliberadamente.
+     ============================================================ -->
+<div class="gate-overlay" id="gate-overlay">
+    <div class="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
+        <div class="gate-head">
+            <span class="gate-icon">&#9888;&#65039;</span>
+            <div class="gate-title" id="gate-title" data-i18n="gate_title"></div>
+        </div>
+        <div class="gate-body" data-i18n-html="gate_body"></div>
+        <div class="gate-actions">
+            <button class="gate-btn" onclick="acceptGate()" data-i18n="gate_accept"></button>
+            <div class="gate-lang">
+                <button id="gbtn-es" class="active" onclick="setLang('es')">ES</button>
+                <button id="gbtn-en" onclick="setLang('en')">EN</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- HEADER -->
 <div class="header"><div class="header-inner">
@@ -227,8 +334,9 @@
     <h1 data-i18n-html="header_title"></h1>
     <p data-i18n="header_subtitle"></p>
     <div class="header-stats">
-        <div class="header-stat"><strong>482</strong> <span data-i18n="patients"></span></div>
-        <div class="header-stat"><strong>0.744</strong> AUC-ROC</div>
+        <div class="header-stat"><strong>482</strong> <span data-i18n="stat_cohort"></span></div>
+        <div class="header-stat"><strong>0.667</strong> <span data-i18n="stat_auc_int"></span></div>
+        <div class="header-stat"><strong>0.744</strong> <span data-i18n="stat_auc_ext"></span></div>
         <div class="header-stat"><strong>9</strong> <span data-i18n="variables"></span></div>
         <div class="header-stat"><strong data-i18n="isotonic_word"></strong> <span data-i18n="calibration"></span></div>
     </div>
@@ -251,8 +359,9 @@
                     <label data-i18n="lbl_age"></label>
                     <button class="info-btn" onclick="showInfo('age')" aria-label="Info">i</button>
                 </div>
+                <div class="hint" data-i18n="hint_age"></div>
                 <div class="input-row">
-                    <input type="range" id="age" min="50" max="96" value="76" oninput="uv('age')">
+                    <input type="range" id="age" min="53" max="93" value="76" oninput="uv('age')">
                     <span class="range-value" id="age-val">76</span>
                 </div>
             </div>
@@ -262,8 +371,9 @@
                     <label>IMC (kg/m&sup2;)</label>
                     <button class="info-btn" onclick="showInfo('imc')" aria-label="Info">i</button>
                 </div>
+                <div class="hint" data-i18n="hint_imc"></div>
                 <div class="input-row">
-                    <input type="range" id="imc" min="15" max="45" value="26" step="0.5" oninput="uv('imc')">
+                    <input type="range" id="imc" min="17.6" max="38.5" value="26" step="0.1" oninput="uv('imc')">
                     <span class="range-value" id="imc-val">26</span>
                 </div>
             </div>
@@ -305,10 +415,15 @@
                     <button class="info-btn" onclick="showInfo('uh')" aria-label="Info">i</button>
                 </div>
                 <div class="hint" data-i18n="hint_uh"></div>
+                <!-- Slider limitado al rango de plausibilidad fisiológica (30-300).
+                     El campo numérico admite cualquier valor para que los avisos
+                     de fuera de rango puedan dispararse realmente. -->
                 <div class="input-row">
-                    <input type="range" id="uh" min="4" max="194" value="78" oninput="uv('uh')">
-                    <span class="range-value" id="uh-val">78</span>
+                    <input type="range" id="uh" min="30" max="300" value="78" oninput="uvUH('slider')">
+                    <input type="number" class="num-input" id="uh-num" value="78" step="0.1" oninput="uvUH('num')" aria-label="Hounsfield Units">
                 </div>
+                <div class="range-warn plaus" id="uh-warn-plaus"><span class="rw-icon">&#9888;&#65039;</span><span data-i18n-html="warn_uh_plaus"></span></div>
+                <div class="range-warn extrap" id="uh-warn-extrap"><span class="rw-icon">&#9888;&#65039;</span><span data-i18n-html="warn_uh_extrap"></span></div>
             </div>
 
             <div class="field">
@@ -336,10 +451,15 @@
         </div>
     </div>
 
-    <button class="predict-btn" onclick="predict()" data-i18n="btn_predict"></button>
+    <!-- Deshabilitado hasta que se acepte el aviso de seguridad -->
+    <button class="predict-btn" id="predict-btn" onclick="predict()" data-i18n="btn_predict" disabled></button>
 
     <!-- RESULTS -->
     <div id="results" class="results" style="display:none">
+
+        <!-- MARCAS DE FUERA DE RANGO -->
+        <div class="oor-flags" id="oor-flags"></div>
+
 
         <!-- COMPARISON SECTION — bloque principal, simétrico, descriptivo -->
         <div class="comparison-section">
@@ -358,6 +478,10 @@
                         </div>
                     </div>
                     <div class="panel-risk-badge" id="badge-c"></div>
+                    <div class="thr-scale">
+                        <div class="thr-track"><div class="thr-fill" id="fill-c"></div><div class="thr-tick" id="tick-c"></div></div>
+                        <div class="thr-ends"><span>0%</span><span>100%</span></div>
+                    </div>
                 </div>
                 <div class="comparison-panel" id="panel-s">
                     <div class="comparison-panel-label" data-i18n="res_with_cement"></div>
@@ -372,11 +496,47 @@
                         </div>
                     </div>
                     <div class="panel-risk-badge" id="badge-s"></div>
+                    <div class="thr-scale">
+                        <div class="thr-track"><div class="thr-fill" id="fill-s"></div><div class="thr-tick" id="tick-s"></div></div>
+                        <div class="thr-ends"><span>0%</span><span>100%</span></div>
+                    </div>
                 </div>
             </div>
             <div class="scenario-differential">
                 <span class="diff-label" data-i18n="diff_label"></span>
                 <span class="diff-value" id="diff-value">&mdash;</span>
+                <div class="delta-caveat" data-i18n-html="delta_caveat"></div>
+            </div>
+
+            <!-- MÉTRICAS OPERATIVAS DEL UMBRAL ACTIVO -->
+            <div class="op-metrics">
+                <div class="op-metrics-head" id="op-head"></div>
+                <div class="op-metrics-grid">
+                    <div class="op-metric"><strong id="op-se"></strong><span data-i18n="op_se"></span></div>
+                    <div class="op-metric"><strong id="op-sp"></strong><span data-i18n="op_sp"></span></div>
+                    <div class="op-metric"><strong id="op-ppv"></strong><span data-i18n="op_ppv"></span></div>
+                    <div class="op-metric"><strong id="op-npv"></strong><span data-i18n="op_npv"></span></div>
+                </div>
+                <div class="op-metrics-src" id="op-src"></div>
+            </div>
+
+            <!-- MODO ALTERNATIVO DE CRIBADO (0.432) — post-hoc, no es el punto operativo primario -->
+            <div class="adv-section">
+                <button class="adv-toggle" id="adv-toggle" onclick="toggleAdv()">
+                    <span data-i18n="adv_heading"></span><span class="chev">&#9660;</span>
+                </button>
+                <div class="adv-panel" id="adv-panel">
+                    <div class="adv-tags">
+                        <span class="adv-tag">post-hoc</span>
+                        <span class="adv-tag">external validation</span>
+                        <span class="adv-tag">not the primary operating point</span>
+                    </div>
+                    <div class="adv-warn" data-i18n-html="adv_warn"></div>
+                    <div class="adv-switch">
+                        <span class="adv-switch-label" data-i18n="adv_switch"></span>
+                        <label class="toggle"><input type="checkbox" id="adv-mode" onchange="predict()"><span class="toggle-slider"></span></label>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -396,7 +556,10 @@
             <div class="mc-text" data-i18n-html="mc_text"></div>
             <div class="mc-bar-wrap">
                 <div class="mc-bar">
-                    <div class="mc-marker" style="left:48.8%"></div>
+                    <!-- Marcador principal: AUC interna 0.667 -> (0.667-0.5)/0.5 = 33.4% -->
+                    <div class="mc-marker" style="left:33.4%" title="AUC 0.667"></div>
+                    <!-- Marcador secundario: AUC externa 0.744 -> 48.8% -->
+                    <div class="mc-marker" style="left:48.8%;background:#fff;box-shadow:0 0 0 2px var(--primary-darker);opacity:.75" title="AUC 0.744"></div>
                 </div>
                 <div class="mc-scale">
                     <span data-i18n="mc_random"></span>
@@ -410,7 +573,11 @@
 
     <div class="footer">
         <div>Mart&iacute;nez-N&uacute;&ntilde;ez P, Guti&eacute;rrez-Gonz&aacute;lez R. <span data-i18n="footer_desc"></span><br>TFM &mdash; Universidad Europea &mdash; 2025/2026</div>
-        <div class="footer-model">Logistic Regression &middot; Platt Calibration &middot; AUC 0.744 (val. ext., n=74) &middot; n=482 &middot; 9 features &middot; v5.1</div>
+        <div class="footer-model">Calculator v1.1 &middot; frozen model v5.1 &middot; Logistic Regression + Platt &middot; 9 features &middot; derivation n=482 &middot; AUC 0.667 (internal 5-fold CV) &middot; 0.744 (external, n=74)</div>
+        <div class="footer-links">
+            <a href="{{GITHUB_URL}}" target="_blank" rel="noopener"><span>&#128193;</span><span data-i18n="footer_source"></span></a>
+            <a href="https://ovf-predictor.vercel.app/" target="_blank" rel="noopener"><span>&#128279;</span><span>ovf-predictor.vercel.app</span></a>
+        </div>
     </div>
 </div>
 
@@ -441,29 +608,40 @@
 // ===================================================================
 const I = {
 es: {
-    header_badge: "Herramienta de Investigaci\u00f3n \u2014 v5.1",
+    header_badge: "Herramienta de Investigaci\u00f3n \u2014 v1.1",
     header_title: "Predictor de Resultado en Fracturas<br>Osteopor\u00f3ticas Toracolumbares",
     header_subtitle: "Modelo de regresi\u00f3n log\u00edstica con calibraci\u00f3n Platt y 9 variables predictoras. Estima la probabilidad de resultado cl\u00ednico desfavorable; no recomienda tratamiento.",
     patients: "pacientes", variables: "variables",
     isotonic_word: "Platt", calibration: "calibraci\u00f3n",
-    disclaimer: "<strong>Solo para uso en investigaci\u00f3n.</strong> Prototipo acad\u00e9mico. <strong>Esta herramienta predice resultados; no recomienda tratamientos.</strong> No sustituye el juicio cl\u00ednico. Modelo observacional retrospectivo con calibraci\u00f3n Platt.",
+    stat_cohort: "cohorte de derivaci\u00f3n",
+    stat_auc_int: "AUC-ROC \u00b7 CV interna",
+    stat_auc_ext: "AUC-ROC \u00b7 val. externa (n=74)",
+
+    gate_title: "Aviso de seguridad \u2014 leer antes de ver resultados",
+    gate_body: "<p>La diferencia contrafactual entre escenarios (\u0394) que muestra esta calculadora es una <strong>estimaci\u00f3n generadora de hip\u00f3tesis</strong>, obtenida de un modelo de regresi\u00f3n log\u00edstica observacional en el que el tratamiento (cementaci\u00f3n vertebral) se incluye como covariable dentro del propio modelo. <strong>No es una estimaci\u00f3n causal del efecto del tratamiento.</strong></p><p>El modelo <strong>no incorpora el riesgo del procedimiento</strong> \u2014 fuga de cemento, fractura de nivel adyacente, eventos emb\u00f3licos, infecci\u00f3n \u2014 <strong>ni las contraindicaciones</strong> a la cementaci\u00f3n.</p><p class=\"gate-em\"><strong>No debe utilizarse como recomendaci\u00f3n de tratamiento.</strong> Solo para uso en investigaci\u00f3n. No sustituye el juicio cl\u00ednico.</p>",
+    gate_accept: "He le\u00eddo y comprendo este aviso",
+
+    disclaimer: "<strong>Solo para uso en investigaci\u00f3n.</strong> El \u0394 entre escenarios es una <strong>estimaci\u00f3n generadora de hip\u00f3tesis</strong>, no causal; no incorpora riesgo procedimental ni contraindicaciones y <strong>no es una recomendaci\u00f3n de tratamiento</strong>. No sustituye el juicio cl\u00ednico.",
     card_patient: "&#128100; Paciente",
     card_fracture: "&#129460; Fractura",
     card_treatment: "&#128295; Tratamiento",
     lbl_age: "Edad (a\u00f1os)",
+    hint_age: "Rango de la cohorte de derivaci\u00f3n: 53\u201393 a\u00f1os",
+    hint_imc: "Rango de la cohorte de derivaci\u00f3n: 17,6\u201338,5 kg/m\u00b2",
     lbl_mfi: "\u00cdndice de Fragilidad (mFI)",
     hint_hs: "Estado funcional global",
     lbl_gs: "Clasificaci\u00f3n OF (Morfolog\u00eda fractura)",
     lbl_uh: "Unidades Hounsfield (UH)",
-    hint_uh: "Densidad \u00f3sea en TC \u2014 mayor = mejor calidad",
+    hint_uh: "Densidad \u00f3sea en TC \u2014 mayor = mejor calidad. Deslizador limitado a 30\u2013300 UH (plausibilidad fisiol\u00f3gica); el campo num\u00e9rico admite cualquier valor.",
+    warn_uh_plaus: "<strong>Valor fuera del rango fisiol\u00f3gico plausible (30\u2013300 UH).</strong> Verifique la medici\u00f3n del ROI antes de interpretar el resultado.",
+    warn_uh_extrap: "<strong>Fuera del rango de entrenamiento del modelo (16,6\u2013147,6 UH).</strong> La predicci\u00f3n es una extrapolaci\u00f3n y su fiabilidad no ha sido evaluada en este rango.",
     lbl_mech: "Mecanismo lesional",
     lbl_defprog: "Progresi\u00f3n de la deformidad",
     hint_treatment: "El modelo compara autom\u00e1ticamente ambos escenarios (conservador vs cementaci\u00f3n vertebral).",
     btn_predict: "Calcular Predicci\u00f3n Comparativa",
 
-    risk_badge_high: "Riesgo Alto",
-    risk_badge_mod: "Riesgo Moderado",
-    risk_badge_low: "Riesgo Bajo",
+    cls_above: "Desfavorable predicho (\u2265{th})",
+    cls_below: "Favorable predicho (<{th})",
 
     comparison_title: "Probabilidad estimada de resultado desfavorable",
     res_no_cement: "Sin cementaci\u00f3n",
@@ -474,18 +652,32 @@ es: {
     diff_high: "{bp} puntos porcentuales menos de riesgo predicho con cementaci\u00f3n.",
     diff_mod: "{bp} puntos porcentuales menos de riesgo predicho con cementaci\u00f3n.",
     diff_low: "{bp} puntos porcentuales de diferencia entre escenarios.",
+    delta_caveat: "<strong>\u0394 = estimaci\u00f3n generadora de hip\u00f3tesis, no causal.</strong> Procede de un modelo observacional con la cementaci\u00f3n incluida como covariable. No incorpora riesgo procedimental (fuga de cemento, fractura de nivel adyacente, eventos emb\u00f3licos, infecci\u00f3n) ni contraindicaciones. <strong>No constituye una recomendaci\u00f3n de tratamiento.</strong>",
+
+    op_head_primary: "Punto operativo: umbral {th} \u2014 validaci\u00f3n cruzada interna",
+    op_head_screen: "Modo cribado (post-hoc): umbral {th} \u2014 validaci\u00f3n externa",
+    op_se: "Sensibilidad", op_sp: "Especificidad", op_ppv: "VPP", op_npv: "VPN",
+    op_src_primary: "\u00cdndice de Youden en validaci\u00f3n cruzada estratificada de 5 folds (n=482). Punto operativo primario, pre-especificado sobre la cohorte de derivaci\u00f3n. AUC 0,667 \u00b7 Brier 0,227.",
+    op_src_screen: "\u00cdndice de Youden en la cohorte de validaci\u00f3n externa (n=74). Selecci\u00f3n post-hoc: no es el punto operativo primario. AUC 0,744 \u00b7 Brier 0,211.",
+
+    adv_heading: "Modo alternativo de cribado (umbral 0,432) \u2014 avanzado",
+    adv_warn: "El umbral 0,432 se obtuvo <strong>a posteriori sobre la cohorte de validaci\u00f3n externa</strong> (n=74), el mismo conjunto empleado para estimar el rendimiento. Un umbral seleccionado sobre el conjunto en el que se eval\u00faa produce m\u00e9tricas optimistas. <strong>No es el punto operativo primario de esta herramienta</strong> y se ofrece \u00fanicamente como an\u00e1lisis de sensibilidad. Prioriza la sensibilidad (90,7 %) a costa de la especificidad (54,8 %).",
+    adv_switch: "Reclasificar usando el umbral 0,432",
 
     res_factors_title: "&#128202; Contribuci\u00f3n de cada variable",
     res_factors_subtitle: "C\u00f3mo influye cada variable del perfil del paciente sobre el riesgo predicho (escenario conservador, sin cementaci\u00f3n).",
 
     mc_title: "Fiabilidad del modelo \u2014 a tener en cuenta",
-    mc_text: "El modelo presenta un AUC de <strong>0.744</strong> en validaci\u00f3n externa (n=74), lo que indica una capacidad predictiva <strong>moderada</strong>. Es \u00fatil como apoyo para confirmar sospechas cl\u00ednicas, pero <strong>no debe emplearse de forma aut\u00f3noma</strong> para decisiones quir\u00fargicas. Los resultados deben siempre integrarse con el juicio cl\u00ednico, exploraci\u00f3n f\u00edsica y otros datos del paciente.",
+    mc_text: "El modelo presenta un AUC de <strong>0,667</strong> en validaci\u00f3n cruzada interna (n=482) y de <strong>0,744</strong> en validaci\u00f3n externa (n=74, IC95 % 0,628\u20130,844), lo que indica una capacidad predictiva <strong>moderada</strong>. El punto operativo de la herramienta es el umbral interno pre-especificado, coherente con un modelo congelado. Es \u00fatil como apoyo para confirmar sospechas cl\u00ednicas, pero <strong>no debe emplearse de forma aut\u00f3noma</strong> para decisiones quir\u00fargicas. Los resultados deben siempre integrarse con el juicio cl\u00ednico, exploraci\u00f3n f\u00edsica y otros datos del paciente.",
     mc_random: "Aleatorio",
     mc_moderate: "Moderado",
     mc_good: "Bueno",
     mc_excellent: "Excelente",
 
     footer_desc: "Modelo de ML explicable para OVFs toracolumbares.",
+    footer_source: "Código fuente (GitHub)",
+    oor_plaus: "<strong>Valor de UH fuera del rango fisiológico plausible (30–300).</strong> Valor introducido: {v} UH. Verifique la medición antes de interpretar esta predicción.",
+    oor_extrap: "<strong>Fuera del rango de entrenamiento del modelo — out-of-training-range.</strong> El rango de UH observado en la cohorte de derivación fue 16,6–147,6; valor introducido: {v} UH. Esta predicción es una <strong>extrapolación</strong> y su fiabilidad no ha sido evaluada en este rango.",
 
     opts_mfi: [["0","No fr\u00e1gil"],["1","Pre-fr\u00e1gil","selected"],["2","Fr\u00e1gil"]],
     opts_hs: [["-2","-2 \u2014 Muy deteriorado"],["-1","-1 \u2014 Deteriorado"],["0","0 \u2014 Basal","selected"]],
@@ -548,29 +740,40 @@ es: {
     rec_low: ""
 },
 en: {
-    header_badge: "Research Tool \u2014 v5.1",
+    header_badge: "Research Tool \u2014 v1.1",
     header_title: "Outcome Predictor for Thoracolumbar<br>Osteoporotic Fractures",
     header_subtitle: "Logistic regression model with Platt calibration and 9 predictor variables. Estimates probability of unfavorable clinical outcome; does not recommend treatment.",
     patients: "patients", variables: "variables",
     isotonic_word: "Platt", calibration: "calibration",
-    disclaimer: "<strong>For research use only.</strong> Academic prototype. <strong>This tool predicts outcomes; it does not recommend treatments.</strong> Does not replace clinical judgment. Retrospective observational model with Platt calibration.",
+    stat_cohort: "derivation cohort",
+    stat_auc_int: "AUC-ROC · internal CV",
+    stat_auc_ext: "AUC-ROC · external val. (n=74)",
+
+    gate_title: "Safety notice — read before viewing any result",
+    gate_body: "<p>The counterfactual difference between scenarios (Δ) displayed by this calculator is a <strong>hypothesis-generating estimate</strong> derived from an observational logistic-regression model in which treatment (vertebral cementation) is included as a covariate within the model itself. <strong>It is not a causal estimate of treatment effect.</strong></p><p>The model <strong>does not incorporate procedural risk</strong> — cement leakage, adjacent-level fracture, embolic events, infection — <strong>nor any contraindication</strong> to cementation.</p><p class=\"gate-em\"><strong>It must not be used as a treatment recommendation.</strong> For research use only. It does not replace clinical judgment.</p>",
+    gate_accept: "I have read and understand this notice",
+
+    disclaimer: "<strong>For research use only.</strong> The between-scenario Δ is a <strong>hypothesis-generating estimate</strong>, not causal; it does not incorporate procedural risk or contraindications and is <strong>not a treatment recommendation</strong>. Does not replace clinical judgment.",
     card_patient: "&#128100; Patient",
     card_fracture: "&#129460; Fracture",
     card_treatment: "&#128295; Treatment",
     lbl_age: "Age (years)",
+    hint_age: "Derivation cohort range: 53\u201393 years",
+    hint_imc: "Derivation cohort range: 17.6\u201338.5 kg/m\u00b2",
     lbl_mfi: "Frailty Index (mFI)",
     hint_hs: "Overall functional status",
     lbl_gs: "OF Classification (Fracture morphology)",
     lbl_uh: "Hounsfield Units (HU)",
-    hint_uh: "Bone density on CT \u2014 higher = better quality",
+    hint_uh: "Bone density on CT \u2014 higher = better quality. Slider restricted to 30\u2013300 HU (physiological plausibility); the numeric field accepts any value.",
+    warn_uh_plaus: "<strong>Value outside the plausible physiological range (30\u2013300 HU).</strong> Verify the ROI measurement before interpreting the result.",
+    warn_uh_extrap: "<strong>Outside the model's training range (16.6\u2013147.6 HU).</strong> The prediction is an extrapolation and its reliability has not been assessed in this range.",
     lbl_mech: "Injury Mechanism",
     lbl_defprog: "Deformity progression",
     hint_treatment: "The model automatically compares both scenarios (conservative vs vertebral cementation).",
     btn_predict: "Calculate Comparative Prediction",
 
-    risk_badge_high: "High Risk",
-    risk_badge_mod: "Moderate Risk",
-    risk_badge_low: "Low Risk",
+    cls_above: "Predicted unfavorable (≥{th})",
+    cls_below: "Predicted favorable (<{th})",
 
     comparison_title: "Estimated probability of unfavorable outcome",
     res_no_cement: "Without cementation",
@@ -581,18 +784,32 @@ en: {
     diff_high: "{bp} percentage points lower predicted risk with cementation.",
     diff_mod: "{bp} percentage points lower predicted risk with cementation.",
     diff_low: "{bp} percentage points difference between scenarios.",
+    delta_caveat: "<strong>Δ = hypothesis-generating estimate, not causal.</strong> It derives from an observational model with cementation included as a covariate. It does not incorporate procedural risk (cement leakage, adjacent-level fracture, embolic events, infection) or contraindications. <strong>It is not a treatment recommendation.</strong>",
+
+    op_head_primary: "Operating point: threshold {th} — internal cross-validation",
+    op_head_screen: "Screening mode (post-hoc): threshold {th} — external validation",
+    op_se: "Sensitivity", op_sp: "Specificity", op_ppv: "PPV", op_npv: "NPV",
+    op_src_primary: "Youden index on stratified 5-fold cross-validation (n=482). Primary operating point, pre-specified on the derivation cohort. AUC 0.667 · Brier 0.227.",
+    op_src_screen: "Youden index on the external validation cohort (n=74). Post-hoc selection: not the primary operating point. AUC 0.744 · Brier 0.211.",
+
+    adv_heading: "Alternative screening mode (threshold 0.432) — advanced",
+    adv_warn: "The 0.432 threshold was obtained <strong>post-hoc on the external validation cohort</strong> (n=74), the same set used to estimate performance. A threshold selected on the set where it is evaluated yields optimistic metrics. <strong>It is not the primary operating point of this tool</strong> and is provided solely as a sensitivity analysis. It prioritises sensitivity (90.7 %) at the cost of specificity (54.8 %).",
+    adv_switch: "Reclassify using the 0.432 threshold",
 
     res_factors_title: "&#128202; Variable contribution",
     res_factors_subtitle: "How each variable in the patient profile influences the predicted risk (conservative scenario, without cementation).",
 
     mc_title: "Model reliability \u2014 important note",
-    mc_text: "The model achieves an AUC of <strong>0.744</strong> on external validation (n=74), indicating <strong>moderate</strong> predictive performance. It is useful as a tool to support clinical suspicion but <strong>should not be used autonomously</strong> for surgical decisions. Outputs must always be integrated with clinical judgment, physical examination and other patient data.",
+    mc_text: "The model achieves an AUC of <strong>0.667</strong> on internal cross-validation (n=482) and <strong>0.744</strong> on external validation (n=74, 95 % CI 0.628–0.844), indicating <strong>moderate</strong> predictive performance. The tool's operating point is the pre-specified internal threshold, consistent with a frozen model. It is useful as a tool to support clinical suspicion but <strong>should not be used autonomously</strong> for surgical decisions. Outputs must always be integrated with clinical judgment, physical examination and other patient data.",
     mc_random: "Random",
     mc_moderate: "Moderate",
     mc_good: "Good",
     mc_excellent: "Excellent",
 
     footer_desc: "Explainable ML model for thoracolumbar OVFs.",
+    footer_source: "Source code (GitHub)",
+    oor_plaus: "<strong>HU value outside the plausible physiological range (30–300).</strong> Entered value: {v} HU. Verify the measurement before interpreting this prediction.",
+    oor_extrap: "<strong>Out-of-training-range.</strong> The HU range observed in the derivation cohort was 16.6–147.6; entered value: {v} HU. This prediction is an <strong>extrapolation</strong> and its reliability has not been assessed in this range.",
 
     opts_mfi: [["0","Not frail"],["1","Pre-frail","selected"],["2","Frail"]],
     opts_hs: [["-2","-2 \u2014 Very deteriorated"],["-1","-1 \u2014 Deteriorated"],["0","0 \u2014 Baseline","selected"]],
@@ -663,6 +880,8 @@ function setLang(lang) {
     document.documentElement.lang = lang;
     document.getElementById('btn-es').className = 'lang-btn' + (lang === 'es' ? ' active' : '');
     document.getElementById('btn-en').className = 'lang-btn' + (lang === 'en' ? ' active' : '');
+    document.getElementById('gbtn-es').className = (lang === 'es' ? 'active' : '');
+    document.getElementById('gbtn-en').className = (lang === 'en' ? 'active' : '');
     const t = I[lang];
 
     document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -688,7 +907,19 @@ function setLang(lang) {
         if (validValues.includes(curVal)) sel.value = curVal;
     });
 
-    if (document.getElementById('results').style.display !== 'none') predict();
+    uv('age'); uv('imc'); checkUH();
+    if (GATE_ACCEPTED && document.getElementById('results').style.display !== 'none') predict();
+}
+
+// ===================================================================
+// SAFETY GATE — ningún resultado puede visualizarse antes de aceptar.
+// Sin persistencia: se muestra en cada carga de la página.
+// ===================================================================
+let GATE_ACCEPTED = false;
+function acceptGate(){
+    GATE_ACCEPTED = true;
+    document.getElementById('gate-overlay').classList.add('hidden');
+    document.getElementById('predict-btn').disabled = false;
 }
 
 // ===================================================================
@@ -795,64 +1026,146 @@ function getRaw(va){
         +document.getElementById('imc').value,
         +document.getElementById('mfi').value,
         +document.getElementById('gs').value,
-        +document.getElementById('uh').value
+        getUH()
     ];
 }
 
-function uv(id){document.getElementById(id+'-val').textContent=document.getElementById(id).value}
+function uv(id){
+    const v=String(document.getElementById(id).value);
+    document.getElementById(id+'-val').textContent = (LANG==='es') ? v.replace('.',',') : v;
+}
 function setRing(id,p,colorClass){
     const el=document.getElementById(id);
     el.style.strokeDashoffset=326.73*(1-p);
-    if(colorClass==='green')el.style.stroke='var(--green)';
-    else if(colorClass==='yellow')el.style.stroke='var(--yellow)';
-    else if(colorClass==='red')el.style.stroke='var(--red)';
+    el.style.stroke = colorClass==='green' ? 'var(--green)' : 'var(--red)';
 }
 
-// TRAFFIC LIGHT THRESHOLDS — p is now P(unfavorable outcome)
-// p ≥ 0.60 → red (high risk)
-// 0.40 ≤ p < 0.60 → yellow (uncertain)
-// p < 0.40 → green (low risk)
-function getRiskClass(p){
-    if(p>=0.60)return 'red';
-    if(p>=0.40)return 'yellow';
-    return 'green';
+// ===================================================================
+// RANGOS DE ENTRADA — UH
+//   PLAUS  = rango de plausibilidad fisiológica admitido (límites del slider)
+//   TRAIN  = rango realmente observado en la cohorte de derivación (n=482)
+// Los dos avisos son independientes: un valor puede ser fisiológicamente
+// implausible, estar fuera del rango de entrenamiento, o ambas cosas.
+// ===================================================================
+const UH_PLAUS = {min:30,   max:300};
+const UH_TRAIN = {min:16.6, max:147.6};
+
+function getUH(){
+    const v = parseFloat(document.getElementById('uh-num').value);
+    return isNaN(v) ? UH_TRAIN.min : v;
+}
+
+// Sincroniza slider y campo numérico. El slider está acotado a 30–300;
+// el campo numérico admite cualquier valor para que los avisos puedan saltar.
+function uvUH(src){
+    const sl = document.getElementById('uh'), nu = document.getElementById('uh-num');
+    if(src === 'slider'){ nu.value = sl.value; }
+    else {
+        const v = parseFloat(nu.value);
+        if(!isNaN(v)) sl.value = Math.min(UH_PLAUS.max, Math.max(UH_PLAUS.min, v));
+    }
+    checkUH();
+    if(GATE_ACCEPTED && document.getElementById('results').style.display !== 'none') predict();
+}
+
+function uhFlags(){
+    const v = getUH();
+    return {
+        v: v,
+        plaus:  v < UH_PLAUS.min || v > UH_PLAUS.max,
+        extrap: v < UH_TRAIN.min || v > UH_TRAIN.max
+    };
+}
+
+function checkUH(){
+    const f = uhFlags();
+    document.getElementById('uh-warn-plaus').classList.toggle('show', f.plaus);
+    document.getElementById('uh-warn-extrap').classList.toggle('show', f.extrap);
+    document.getElementById('uh-num').classList.toggle('out', f.plaus);
+}
+
+// ===================================================================
+// PUNTOS OPERATIVOS
+// Primario: umbral de Youden en validación cruzada interna de 5 folds
+// (n=482), pre-especificado sobre la cohorte de derivación. Es el que
+// usa la herramienta por defecto, coherente con la defensa de modelo
+// congelado (frozen model).
+// Alternativo: umbral de Youden de la cohorte de validación externa
+// (n=74). Selección post-hoc sobre el mismo conjunto de evaluación;
+// se ofrece únicamente como análisis de sensibilidad.
+// ===================================================================
+const OP = {
+    primary:   {v:0.556, se:63.5, sp:62.6, ppv:66.5, npv:59.4},
+    screening: {v:0.432, se:90.7, sp:54.8, ppv:73.6, npv:81.0}
+};
+function activeOP(){
+    return document.getElementById('adv-mode').checked ? OP.screening : OP.primary;
+}
+// Separador decimal según idioma
+function fmtNum(x, dec){
+    const s = Number(x).toFixed(dec);
+    return LANG === 'es' ? s.replace('.', ',') : s;
+}
+function fmtTh(v){ return fmtNum(v*100, 1) + '%'; }
+function toggleAdv(){
+    document.getElementById('adv-panel').classList.toggle('open');
+    document.getElementById('adv-toggle').classList.toggle('open');
+}
+
+// Renderiza un panel: probabilidad, clasificación binaria respecto al
+// punto operativo activo y escala lineal con la marca del umbral.
+function renderPanel(sfx,p,op,thTxt,t){
+    const above=p>=op.v;
+    const cls=above?'red':'green';
+
+    const el=document.getElementById('prob-'+sfx);
+    el.textContent=fmtNum(p*100,1)+'%';
+    el.style.color=above?'var(--red-dark)':'var(--green-dark)';
+
+    document.getElementById('panel-'+sfx).className='comparison-panel '+cls;
+
+    const b=document.getElementById('badge-'+sfx);
+    b.className='panel-risk-badge '+cls;
+    b.textContent=(above?t.cls_above:t.cls_below).replace('{th}',thTxt);
+
+    const fill=document.getElementById('fill-'+sfx);
+    fill.className='thr-fill '+cls;
+    fill.style.width=(p*100).toFixed(1)+'%';
+
+    const tick=document.getElementById('tick-'+sfx);
+    tick.style.left=(op.v*100).toFixed(1)+'%';
+    tick.setAttribute('data-label',thTxt);
 }
 
 function predict(){
+    if(!GATE_ACCEPTED) return;   // ningún resultado visible antes de aceptar el aviso
     const t=I[LANG];
+    const op=activeOP();
+    const screening=document.getElementById('adv-mode').checked;
+    const thTxt=fmtTh(op.v);
+
     const pC=predictProba(getRaw(0));   // P(unfavorable | conservative)
     const pS=predictProba(getRaw(1));   // P(unfavorable | cementation)
     const benefit=pC-pS;                 // positive = cementation lowers predicted risk
-    const bp=(Math.abs(benefit)*100).toFixed(1);
+    const bp=fmtNum(Math.abs(benefit)*100,1);
 
     document.getElementById('results').style.display='block';
 
-    // ============== SYMMETRIC COMPARISON PANELS ==============
-    // Both panels are equal weight: tool predicts, doesn't recommend.
-    const rcClass=getRiskClass(pC);
-    const rsClass=getRiskClass(pS);
+    // ============== MARCAS DE FUERA DE RANGO (UH) ==============
+    const f=uhFlags();
+    let oorHTML='';
+    if(f.plaus)  oorHTML+='<div class="oor-flag plaus"><span class="oor-icon">&#9888;&#65039;</span><div>'+t.oor_plaus.replace('{v}',fmtNum(f.v,1))+'</div></div>';
+    if(f.extrap) oorHTML+='<div class="oor-flag extrap"><span class="oor-icon">&#9888;&#65039;</span><div>'+t.oor_extrap.replace('{v}',fmtNum(f.v,1))+'</div></div>';
+    document.getElementById('oor-flags').innerHTML=oorHTML;
 
-    // Panel CONSERVATIVE
-    document.getElementById('prob-c').textContent=(pC*100).toFixed(1)+'%';
-    document.getElementById('prob-c').style.color=
-        rcClass==='green'?'var(--green-dark)':rcClass==='yellow'?'var(--yellow-dark)':'var(--red-dark)';
-    document.getElementById('panel-c').className='comparison-panel '+rcClass;
-    const badgeC=document.getElementById('badge-c');
-    badgeC.className='panel-risk-badge '+rcClass;
-    badgeC.textContent=rcClass==='green'?t.risk_badge_low:(rcClass==='yellow'?t.risk_badge_mod:t.risk_badge_high);
-
-    // Panel SURGICAL
-    document.getElementById('prob-s').textContent=(pS*100).toFixed(1)+'%';
-    document.getElementById('prob-s').style.color=
-        rsClass==='green'?'var(--green-dark)':rsClass==='yellow'?'var(--yellow-dark)':'var(--red-dark)';
-    document.getElementById('panel-s').className='comparison-panel '+rsClass;
-    const badgeS=document.getElementById('badge-s');
-    badgeS.className='panel-risk-badge '+rsClass;
-    badgeS.textContent=rsClass==='green'?t.risk_badge_low:(rsClass==='yellow'?t.risk_badge_mod:t.risk_badge_high);
+    // ============== PANELES COMPARATIVOS ==============
+    // Ambos paneles con el mismo peso visual: la herramienta predice, no recomienda.
+    renderPanel('c',pC,op,thTxt,t);
+    renderPanel('s',pS,op,thTxt,t);
 
     setTimeout(()=>{
-        setRing('ring-c',pC,rcClass);
-        setRing('ring-s',pS,rsClass);
+        setRing('ring-c',pC,pC>=op.v?'red':'green');
+        setRing('ring-s',pS,pS>=op.v?'red':'green');
     },100);
 
     // ============== DIFFERENTIAL (descriptive, no recommendation) ==============
@@ -861,6 +1174,14 @@ function predict(){
     else if(benefit>0.03){diffText=t.diff_mod;}
     else {diffText=t.diff_low;}
     document.getElementById('diff-value').textContent=diffText.replace('{bp}',bp);
+
+    // ============== MÉTRICAS DEL PUNTO OPERATIVO ACTIVO ==============
+    document.getElementById('op-head').textContent=(screening?t.op_head_screen:t.op_head_primary).replace('{th}',thTxt);
+    document.getElementById('op-se').textContent=fmtNum(op.se,1)+'%';
+    document.getElementById('op-sp').textContent=fmtNum(op.sp,1)+'%';
+    document.getElementById('op-ppv').textContent=fmtNum(op.ppv,1)+'%';
+    document.getElementById('op-npv').textContent=fmtNum(op.npv,1)+'%';
+    document.getElementById('op-src').textContent=screening?t.op_src_screen:t.op_src_primary;
 
     // ============== FACTOR CONTRIBUTIONS ==============
     // Computed on the CONSERVATIVE scenario (VA=0) so the bars represent

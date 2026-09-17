@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "OVF Predictor"
+abstract: >-
+  Explainable machine-learning calculator estimating the probability of an
+  unfavourable clinico-radiological outcome at three months in thoracolumbar
+  osteoporotic vertebral fractures, with a within-model counterfactual contrast
+  for vertebral cementation. Research prototype; not a medical device.
+type: software
+version: "1.1.0"
+date-released: "2026-09-17"
+license: MIT
+url: "https://ovf-predictor.vercel.app/"
+
+# Sustituir por la URL real del repositorio y descomentar antes de publicar:
+# repository-code: "https://github.com/<usuario>/ovf-predictor"
+
+authors:
+  - family-names: "Martínez-Núñez"
+    given-names: "Pablo"
+  - family-names: "Gutiérrez-González"
+    given-names: "Raquel"
+
+keywords:
+  - osteoporotic vertebral fracture
+  - thoracolumbar spine
+  - vertebral augmentation
+  - clinical prediction model
+  - logistic regression
+  - explainable machine learning
+  - SHAP
+  - clinical decision support
