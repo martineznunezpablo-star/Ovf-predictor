@@ -5,7 +5,7 @@ Estimates the probability of an unfavourable clinico-radiological outcome at 3 m
 scenarios: conservative management versus vertebral cementation (VA).
 
 **Live application:** https://ovf-predictor.vercel.app/
-**Source code:** {{GITHUB_URL}}
+**Source code:** https://github.com/martineznunezpablo-star/Ovf-predictor
 
 ---
 

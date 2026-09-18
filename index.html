@@ -575,7 +575,9 @@
         <div>Mart&iacute;nez-N&uacute;&ntilde;ez P, Guti&eacute;rrez-Gonz&aacute;lez R. <span data-i18n="footer_desc"></span><br>TFM &mdash; Universidad Europea &mdash; 2025/2026</div>
         <div class="footer-model">Calculator v1.1 &middot; frozen model v5.1 &middot; Logistic Regression + Platt &middot; 9 features &middot; derivation n=482 &middot; AUC 0.667 (internal 5-fold CV) &middot; 0.744 (external, n=74)</div>
         <div class="footer-links">
-            <a href="{{GITHUB_URL}}" target="_blank" rel="noopener"><span>&#128193;</span><span data-i18n="footer_source"></span></a>
+            <!-- El marcador del href debe sustituirse por la URL real del repositorio.
+                 Mientras no se sustituya, el enlace se oculta solo (ver initSourceLink). -->
+            <a id="src-link" href="https://github.com/martineznunezpablo-star/Ovf-predictor" target="_blank" rel="noopener"><span>&#128193;</span><span data-i18n="footer_source"></span></a>
             <a href="https://ovf-predictor.vercel.app/" target="_blank" rel="noopener"><span>&#128279;</span><span>ovf-predictor.vercel.app</span></a>
         </div>
     </div>
@@ -1206,8 +1208,16 @@ function predict(){
     document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
+// Oculta el enlace al repositorio mientras el marcador no se haya sustituido,
+// para no publicar nunca un enlace roto.
+function initSourceLink(){
+    const a = document.getElementById('src-link');
+    if(a && /\{\{|^\s*$/.test(a.getAttribute('href') || '')) a.style.display = 'none';
+}
+
 // Initialize
 setLang('es');
+initSourceLink();
 </script>
 
 </body>

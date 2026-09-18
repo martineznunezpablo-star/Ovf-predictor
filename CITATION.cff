@@ -12,8 +12,7 @@ date-released: "2026-09-17"
 license: MIT
 url: "https://ovf-predictor.vercel.app/"
 
-# Sustituir por la URL real del repositorio y descomentar antes de publicar:
-# repository-code: "https://github.com/<usuario>/ovf-predictor"
+repository-code: "https://github.com/martineznunezpablo-star/Ovf-predictor"
 
 authors:
   - family-names: "Martínez-Núñez"
